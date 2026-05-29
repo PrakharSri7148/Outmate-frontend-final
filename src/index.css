@@ -1,0 +1,594 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Apple-inspired grayscale palette */
+    --background: 210 4% 3%; /* near #050505 */
+    --foreground: 0 0% 100%;
+    --card: 210 6% 8%;
+    --card-foreground: 0 0% 100%;
+    --popover: 240 5% 12%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 240 5% 6%;
+    --secondary: 240 5% 9%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 240 5% 9%;
+    --muted-foreground: 240 5% 72%;
+    --accent: 0 0% 100%;
+    --accent-foreground: 240 5% 6%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 100% / 0.08;
+    --input: 0 0% 100% / 0.08;
+    --ring: 0 0% 100%;
+    --radius: 0.875rem;
+
+    --void: #0f0f10;
+    --surface: #161618;
+    --surface-light: #1e1e21;
+    --surface-elevated: #242428;
+    --text-primary: #ffffff;
+    --text-secondary: #b8b8b8;
+    --text-muted: #8a8a8a;
+    --purple: #ffffff;
+    --purple-bright: #e5e5e7;
+    --purple-dim: #242428;
+    --cyan: #b8b8b8;
+    --green: #22c55e;
+    --amber: #f59e0b;
+    --red: #ef4444;
+    --blue: #3b82f6;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    font-family: "Inter", sans-serif;
+    background-color: var(--void);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Space Grotesk", sans-serif;
+  }
+
+  code,
+  pre,
+  .font-mono {
+    font-family: "JetBrains Mono", monospace;
+  }
+}
+
+@layer components {
+  /* Liquid Glass - Apple-inspired navbar */
+  .nav-panel {
+    margin: 16px auto;
+    max-width: 1280px;
+    padding: 10px 18px;
+    border-radius: 24px;
+    background: rgba(20, 20, 22, 0.6);
+    backdrop-filter: blur(24px) saturate(1.06);
+    -webkit-backdrop-filter: blur(24px) saturate(1.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 6px 22px rgba(2, 6, 23, 0.48);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transform-origin: center top;
+    transition: all 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .nav-panel.scrolled {
+    background: rgba(20, 20, 22, 0.68);
+    backdrop-filter: blur(28px) saturate(1.08);
+    -webkit-backdrop-filter: blur(28px) saturate(1.08);
+    padding: 8px 16px;
+    border-radius: 20px;
+    transform: translateY(-4px) scale(0.995);
+  }
+
+  /* Ensure nav sits over content but doesn't cover too much */
+  nav > .container-limit {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  /* Nav items and subtle pill active indicator */
+  .nav-item {
+    position: relative;
+    padding: 8px 10px;
+    color: var(--text-secondary);
+    transition:
+      color 280ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 280ms ease,
+      background 280ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .nav-item::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%) translateY(8px);
+    height: 34px;
+    width: 0px;
+    border-radius: 9999px;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.04),
+      rgba(255, 255, 255, 0.02)
+    );
+    transition:
+      width 320ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 220ms ease;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .nav-item:hover {
+    color: var(--text-primary);
+    transform: translateY(-1px);
+  }
+
+  .nav-item:hover::after {
+    width: 64%;
+    opacity: 1;
+  }
+
+  .nav-item.active {
+    color: var(--text-primary);
+  }
+
+  /* Active pill indicator */
+  .nav-item.active::before {
+    content: "";
+    position: absolute;
+    inset: 4px 2px auto 2px;
+    bottom: 6px;
+    height: 30px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.03);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+    pointer-events: none;
+    transition:
+      opacity 220ms ease,
+      transform 220ms ease;
+    opacity: 1;
+  }
+
+  /* Small subtle liquid morph on hover using radial gradient */
+  .nav-item::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: radial-gradient(
+      120% 40% at 50% 10%,
+      rgba(255, 255, 255, 0.02),
+      transparent 30%
+    );
+    opacity: 0;
+    transition:
+      opacity 300ms ease,
+      transform 300ms ease;
+    pointer-events: none;
+  }
+
+  .nav-item:hover::before {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.02);
+  }
+
+  /* Dropdown container refinement */
+  .relative > .absolute,
+  .relative > div.absolute {
+    /* keep existing dropdown styles; no changes to content */
+  }
+
+  /* CTA tweaks for premium white pill */
+  .navbar-cta {
+    background: #ffffff;
+    color: #0f0f10;
+    padding: 12px 22px;
+    border-radius: 9999px;
+    font-weight: 600;
+    transform-origin: center;
+    transition:
+      transform 220ms cubic-bezier(0.2, 1, 0.3, 1),
+      box-shadow 220ms ease,
+      background 180ms ease;
+    box-shadow: 0 6px 18px rgba(2, 6, 23, 0.18);
+  }
+
+  .navbar-cta:hover {
+    transform: scale(1.03) translateY(-2px);
+    box-shadow: 0 10px 30px rgba(2, 6, 23, 0.2);
+    background: #f7f7f8;
+  }
+
+  /* Mobile menu panel should keep glass look */
+  .lg\:hidden.bg-surface {
+    background: rgba(20, 20, 22, 0.58) !important;
+    backdrop-filter: blur(18px) !important;
+    -webkit-backdrop-filter: blur(18px) !important;
+  }
+
+  .glass-nav {
+    background: rgba(15, 15, 16, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .glass-card {
+    background: rgba(30, 30, 33, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+  }
+
+  /* Neutralize existing violet/purple Tailwind utility usages so the page moves to grayscale
+     This is a pragmatic override: it maps common violet utility classes to neutral glass styles.
+     These rules use !important to ensure they take precedence over generated Tailwind utilities. */
+  .text-violet-400 {
+    color: rgba(255, 255, 255, 0.75) !important;
+  }
+  .text-violet-300 {
+    color: rgba(229, 229, 229, 0.7) !important;
+  }
+  [class*="bg-violet"] {
+    background: rgba(255, 255, 255, 0.03) !important;
+  }
+  [class*="border-violet"] {
+    border-color: rgba(255, 255, 255, 0.04) !important;
+  }
+  .bg-violet-600\/[0.06] {
+    background: rgba(255, 255, 255, 0.03) !important;
+  }
+  .bg-gradient-to-br.from-violet-500\/30 {
+    background-image: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.03),
+      rgba(255, 255, 255, 0.01)
+    ) !important;
+  }
+  .text-violet-300,
+  .text-violet-400,
+  .text-violet-500 {
+    color: rgba(255, 255, 255, 0.72) !important;
+  }
+
+  .glass-card-hover {
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .glass-card-hover:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  }
+
+  .glow-purple {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  }
+
+  .glow-text-purple {
+    text-shadow: none;
+  }
+
+  .btn-primary {
+    background: #ffffff;
+    color: #0f0f10;
+    padding: 14px 28px;
+    border-radius: 9999px;
+    font-weight: 500;
+    font-size: 16px;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-primary:hover {
+    background: #e5e5e7;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.04);
+    color: #ffffff;
+    padding: 14px 28px;
+    border-radius: 9999px;
+    font-weight: 500;
+    font-size: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+  }
+
+  .btn-small {
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 9999px;
+  }
+
+  .text-gradient {
+    background: linear-gradient(135deg, #ffffff 0%, #b8b8b8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .section-padding {
+    padding-top: 120px;
+    padding-bottom: 120px;
+  }
+
+  .container-limit {
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .terminal-glow {
+    text-shadow: none;
+    animation: none;
+  }
+
+  .char {
+    display: inline-block;
+    opacity: 0.2;
+  }
+
+  .grid-item-img {
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    clip-path: circle(100% at 50% 50%);
+  }
+
+  /* ── Premium promo / announcement bar (sits above the navbar) ── */
+  .promo-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 60;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    /* weightless: subtle dark-to-transparent so it blends into the navy top */
+    background: linear-gradient(
+      180deg,
+      rgba(10, 12, 24, 0.55) 0%,
+      rgba(10, 12, 24, 0) 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      transparent 0,
+      #000 6%,
+      #000 94%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      90deg,
+      transparent 0,
+      #000 6%,
+      #000 94%,
+      transparent 100%
+    );
+  }
+
+  /* Push the fixed navbar down so the promo strip sits cleanly above it.
+     `nav.fixed` (0,1,1) outranks Tailwind's `.top-0` (0,1,0) — no need to
+     touch the Navbar component. */
+  nav.fixed {
+    top: 44px;
+  }
+
+  .promo-bar .marquee-track {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    width: max-content;
+    /* left → right: translateX increases over time. 3 identical copies means
+       one copy = 33.333% of the track, so -33.333% → 0 loops seamlessly. */
+    animation: promo-scroll 28s linear infinite;
+    will-change: transform;
+  }
+
+  /* Pause so users can read / click */
+  .promo-bar:hover .marquee-track,
+  .promo-bar:focus-within .marquee-track {
+    animation-play-state: paused;
+  }
+
+  .promo-bar .marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    /* inter-copy spacing baked into the item keeps the seam uniform */
+    padding-right: 56px;
+    white-space: nowrap;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .promo-badge {
+    flex: none;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    padding: 4px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .promo-message {
+    color: rgba(255, 255, 255, 0.82);
+    font-weight: 400;
+  }
+
+  .promo-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #ffffff;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+
+  .promo-arrow {
+    display: inline-block;
+    transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .promo-cta:hover .promo-arrow {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 640px) {
+    .promo-bar {
+      height: 40px;
+    }
+    nav.fixed {
+      top: 40px;
+    }
+    .promo-bar .marquee-item {
+      font-size: 12px;
+      gap: 10px;
+      padding-right: 40px;
+    }
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: "Space Grotesk", sans-serif;
+  }
+
+  .font-body {
+    font-family: "Inter", sans-serif;
+  }
+
+  .font-mono {
+    font-family: "JetBrains Mono", monospace;
+  }
+}
+
+@keyframes glow-pulse {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-slow {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Promo bar marquee — slides left → right, loops seamlessly with 3 copies */
+@keyframes promo-scroll {
+  0% {
+    transform: translateX(-33.3333%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promo-bar .marquee-track {
+    animation: none;
+    transform: translateX(0);
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Spline / AI panel loader ── */
+.loader {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
+  border-top-color: rgba(255, 255, 255, 0.65);
+  animation: spin-loader 0.9s linear infinite;
+}
+
+@keyframes spin-loader {
+  to {
+    transform: rotate(360deg);
+  }
+}
