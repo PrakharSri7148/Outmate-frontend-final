@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion'
-import { SplineSceneFixed } from '../../components/ui/SplineScene'
-import SplineErrorBoundary from '../../components/ui/SplineErrorBoundary'
+import VisitorSandbox from './visitor-sandbox/VisitorSandbox'
 
 const headlineLines = ['IDENTIFY', '70–80%', 'OF YOUR', 'WEBSITE', 'TRAFFIC']
 
@@ -22,28 +21,6 @@ const intelligenceCards = [
 		description: 'Turn raw visitor activity into identified pipeline your team can act on.',
 	},
 ]
-
-function TrafficSplineVisual() {
-	return (
-		<div className="relative h-full w-full">
-			<div
-				aria-hidden
-				className="pointer-events-none absolute inset-0"
-				style={{
-					background:
-						'radial-gradient(circle at 50% 45%, rgba(255,255,255,0.08) 0%, rgba(124,58,237,0.06) 22%, transparent 55%), radial-gradient(circle at 50% 50%, rgba(59,130,246,0.03) 0%, transparent 60%)',
-					filter: 'blur(18px)',
-				}}
-			/>
-
-			<div className="relative h-full w-full drop-shadow-[0_0_50px_rgba(255,255,255,0.08)]">
-				<SplineErrorBoundary>
-					<SplineSceneFixed scene="https://prod.spline.design/CqvzfgH6e0SrfRMz/scene.splinecode" className="h-full w-full" autoReplayMs={18000} />
-				</SplineErrorBoundary>
-			</div>
-		</div>
-	)
-}
 
 export default function TrafficIdentificationSection() {
 	return (
@@ -70,7 +47,7 @@ export default function TrafficIdentificationSection() {
 						className="flex min-h-[440px] items-center justify-center sm:min-h-[560px] lg:min-h-[760px]"
 					>
 						<div className="h-[clamp(440px,58vw,780px)] w-full max-w-[920px] lg:h-[760px]">
-							<TrafficSplineVisual />
+							<VisitorSandbox />
 						</div>
 					</motion.div>
 

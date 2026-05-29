@@ -3,6 +3,7 @@ import PlatformSandbox from '../sections/home/PlatformSandbox'
 import TrafficIdentificationSection from '../sections/home/TrafficIdentificationSection'
 import IdentityResolution from '../sections/home/IdentityResolution'
 import HowItWorks from '../sections/home/HowItWorks'
+import WorkflowIntegrations from '../sections/home/WorkflowIntegrations'
 import FeatureShowcase from '../sections/home/FeatureShowcase'
 import TrustMetrics from '../sections/home/TrustMetrics'
 import PlatformSuite from '../sections/home/PlatformSuite'
@@ -31,6 +32,9 @@ export default function Home() {
       </div>
       <div id="how-it-works">
         <HowItWorks />
+      </div>
+      <div id="integrations">
+        <WorkflowIntegrations />
       </div>
       <FeatureShowcase />
       <TrustMetrics />

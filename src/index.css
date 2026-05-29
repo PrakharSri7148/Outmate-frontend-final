@@ -592,3 +592,9 @@
     transform: rotate(360deg);
   }
 }
+
+/* Visitor sandbox — pulsing "live"/anonymous dot */
+@keyframes sandbox-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.78); }
+}
