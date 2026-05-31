@@ -359,6 +359,16 @@
     padding-right: 24px;
   }
 
+  /* Footer hero title: responsive, doesn't create horizontal overflow */
+  .footer-hero-title {
+    font-size: clamp(32px, 6.8vw, 102px);
+    line-height: 0.9;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+  }
+
   .terminal-glow {
     text-shadow: none;
     animation: none;
