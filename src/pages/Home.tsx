@@ -1,12 +1,11 @@
 import HeroSection from '../sections/home/HeroSection'
 import PlatformSandbox from '../sections/home/PlatformSandbox'
-import TrafficIdentificationSection from '../sections/home/TrafficIdentificationSection'
 import IdentityResolution from '../sections/home/IdentityResolution'
 import HowItWorks from '../sections/home/HowItWorks'
 import WorkflowIntegrations from '../sections/home/WorkflowIntegrations'
 import FeatureShowcase from '../sections/home/FeatureShowcase'
 import TrustMetrics from '../sections/home/TrustMetrics'
-import PlatformSuite from '../sections/home/PlatformSuite'
+import PlatformCapabilities from '../sections/home/PlatformCapabilities'
 import CustomerProofSection from '../sections/home/CustomerProofSection'
 import UseCasesSection from '../sections/home/UseCasesSection'
 import TrustPositioning from '../sections/home/TrustPositioning'
@@ -20,9 +19,6 @@ export default function Home() {
     <div className="relative z-[2]">
       <div id="hero" className="relative z-[2]">
         <HeroSection />
-      </div>
-      <div className="relative z-[2]">
-        <TrafficIdentificationSection />
       </div>
       <div id="platform-sandbox" className="relative z-[2] bg-white">
         <PlatformSandbox />
@@ -38,7 +34,9 @@ export default function Home() {
       </div>
       <FeatureShowcase />
       <TrustMetrics />
-      {/* PlatformSuite removed per request */}
+      <div>
+        <PlatformCapabilities />
+      </div>
       <CustomerProofSection />
       <div id="use-cases">
         <UseCasesSection />

@@ -22,6 +22,12 @@ const LOGOS = [
 
 const ease = [0.22, 1, 0.36, 1] as const
 
+// Split the logos across two stacked strips (recomputed from length so it stays
+// correct if logos are added/removed).
+const mid = Math.ceil(LOGOS.length / 2)
+const topLogos = LOGOS.slice(0, mid)
+const bottomLogos = LOGOS.slice(mid)
+
 function Logo({ name, src }: { name: string; src: string }) {
   return (
     <div className="flex shrink-0 items-center justify-center px-2 transition-transform duration-300 hover:scale-110">
@@ -33,6 +39,30 @@ function Logo({ name, src }: { name: string; src: string }) {
         className="h-11 w-auto select-none object-contain md:h-14"
       />
     </div>
+  )
+}
+
+// One continuously-scrolling strip. Content is duplicated so the linear loop is
+// gap-free; `reverse` flips the scroll direction.
+function MarqueeStrip({
+  logos,
+  duration,
+  reverse = false,
+}: {
+  logos: { name: string; src: string }[]
+  duration: number
+  reverse?: boolean
+}) {
+  return (
+    <motion.div
+      className="flex w-max items-center gap-12 md:gap-20"
+      animate={{ x: reverse ? ['-50%', '0%'] : ['0%', '-50%'] }}
+      transition={{ duration, ease: 'linear', repeat: Infinity, repeatType: 'loop' }}
+    >
+      {[...logos, ...logos].map((logo, i) => (
+        <Logo key={`${logo.name}-${i}`} {...logo} />
+      ))}
+    </motion.div>
   )
 }
 
@@ -66,7 +96,7 @@ export default function WorkflowIntegrations() {
         </motion.div>
       </div>
 
-      {/* ── Logo marquee · slides left → right, then reverses back ── */}
+      {/* ── Logo marquee · two strips scrolling in opposite directions ── */}
       <div
         className="relative w-full overflow-hidden py-4"
         style={{
@@ -83,21 +113,12 @@ export default function WorkflowIntegrations() {
             ))}
           </div>
         ) : (
-          <motion.div
-            className="flex w-max items-center gap-12 md:gap-20"
-            animate={{ x: ['0%', '-50%'] }}
-            transition={{
-              duration: 26,
-              ease: 'easeInOut',
-              repeat: Infinity,
-              repeatType: 'reverse',
-            }}
-          >
-            {/* Rendered twice so the row stays full while sliding both directions */}
-            {[...LOGOS, ...LOGOS].map((logo, i) => (
-              <Logo key={`${logo.name}-${i}`} {...logo} />
-            ))}
-          </motion.div>
+          <div className="flex flex-col gap-8 md:gap-10">
+            {/* Top strip · first half · scrolls left */}
+            <MarqueeStrip logos={topLogos} duration={28} />
+            {/* Bottom strip · second half · scrolls right */}
+            <MarqueeStrip logos={bottomLogos} duration={34} reverse />
+          </div>
         )}
       </div>
     </section>

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc *)",
+      "Bash(awk '/function GridBg/,/^}/' src/sections/home/FeatureShowcase.tsx)"
+    ]
+  }
+}
