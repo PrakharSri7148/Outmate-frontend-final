@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from 'react'
+import { useRef, useCallback } from 'react'
 import { motion, useSpring, useTransform } from 'framer-motion'
 
 interface SpotlightProps {
@@ -15,7 +15,6 @@ export function Spotlight({
   size = 400,
 }: SpotlightProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [isHovered, setIsHovered] = useState(false)
 
   // Spring-physics mouse tracking
   const mouseX = useSpring(0, { stiffness: 120, damping: 24, mass: 0.8 })
@@ -34,12 +33,10 @@ export function Spotlight({
   )
 
   const handleMouseEnter = () => {
-    setIsHovered(true)
     opacity.set(1)
   }
 
   const handleMouseLeave = () => {
-    setIsHovered(false)
     opacity.set(0)
   }
 

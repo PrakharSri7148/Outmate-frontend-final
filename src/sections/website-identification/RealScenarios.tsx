@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion'
 import { AlertCircle, CheckCircle2 } from 'lucide-react'
 import SectionReveal from '../../components/SectionReveal'
 

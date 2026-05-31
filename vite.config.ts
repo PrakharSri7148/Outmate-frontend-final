@@ -7,6 +7,9 @@ import { inspectAttr } from 'kimi-plugin-inspect-react'
 export default defineConfig({
   base: './',
   plugins: [inspectAttr(), react()],
+  build: {
+    chunkSizeWarningLimit: 2000,
+  },
   server: {
     port: 3000,
   },

@@ -110,7 +110,7 @@ function CapabilityCard({ item, index }: { item: Capability; index: number }) {
     >
       <Link
         to={item.href}
-        className="group relative flex h-full flex-col overflow-hidden rounded-[24px] bg-[#EAEAE7] p-6 shadow-[0_2px_10px_rgba(15,23,42,0.05)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:shadow-[0_20px_50px_-24px_rgba(15,23,42,0.22)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F6F6F4] md:p-7"
+        className="group relative flex h-full flex-col overflow-hidden rounded-[24px] bg-[#EAEAE7] p-6 shadow-[0_2px_10px_rgba(15,23,42,0.05)] transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-[0_20px_50px_-24px_rgba(15,23,42,0.22)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F6F6F4] md:p-7"
       >
         {/* lavender diagonal stripe corner (decorative) */}
         <span

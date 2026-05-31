@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { motion, useAnimation } from "framer-motion";
 
 type ParticlesProps = {
@@ -26,7 +26,6 @@ export const SparklesCore = (props: ParticlesProps) => {
     particleDensity = 120,
   } = props;
 
-  const [init, setInit] = useState(false);
   const controls = useAnimation();
 
   useEffect(() => {
@@ -62,7 +61,7 @@ const CanvasParticles = ({
   particleColor,
   particleDensity,
 }: any) => {
-  const canvasRef = React.useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   
   useEffect(() => {
     const canvas = canvasRef.current;

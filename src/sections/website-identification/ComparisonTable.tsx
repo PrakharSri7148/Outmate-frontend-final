@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion'
 import { Check, Minus } from 'lucide-react'
 import SectionReveal from '../../components/SectionReveal'
 

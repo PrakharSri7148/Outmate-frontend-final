@@ -9,13 +9,12 @@ import {
   MessageSquare,
   Users,
   Calendar,
-  Layers,
   ArrowRight,
   Play
 } from 'lucide-react'
 
 // Easing for cinematic animations
-const smoothTransition = { duration: 1.2, ease: [0.22, 1, 0.36, 1] }
+const smoothTransition = { duration: 1.2, ease: [0.22, 1, 0.36, 1] as const }
 
 const workflowNodes = [
   { label: 'Visitor lands on pricing page', icon: Activity },
@@ -179,7 +178,7 @@ export default function WorkflowAutomation() {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
               {modules.map((mod, i) => (
                 <SectionReveal key={i} delay={i * 0.1}>
-                  <div className="group flex flex-col items-center justify-center p-8 rounded-[32px] bg-white/[0.03] border border-white/[0.08] backdrop-blur-xl hover:bg-white/[0.05] hover:border-white/[0.15] transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-2 relative">
+                  <div className="group flex flex-col items-center justify-center p-8 rounded-[32px] bg-white/[0.03] border border-white/[0.08] backdrop-blur-xl hover:bg-white/[0.05] hover:border-white/[0.15] transition-all duration-700 ease-out hover:-translate-y-2 relative">
                     <div className="absolute inset-0 bg-white/[0.02] blur-xl rounded-[32px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                     <mod.icon className="w-8 h-8 text-white/60 mb-4 group-hover:text-white transition-colors duration-500 relative z-10" />
                     <span className="text-sm font-medium text-white/80 relative z-10">{mod.label}</span>
