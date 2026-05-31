@@ -56,11 +56,11 @@ export default function Footer() {
           
           {/* Left Column: Brand & Logo area */}
           <div className="lg:col-span-5 flex flex-col items-start px-0">
-            <h2 className="text-[44px] md:text-[58px] lg:text-[102px] leading-[0.80] tracking-[-0.1em] lg:-ml-56 uppercase font-[900] text-white/96 max-w-[1050px] transition-all duration-500 hover:text-white" style={{ textRendering: 'optimizeLegibility' }}>
+            <h2 className="text-[44px] md:text-[58px] lg:text-[102px] leading-[0.80] tracking-[-0.1em] lg:-translate-x-56 uppercase font-[900] text-white/96 max-w-[1050px] transition-all duration-500 hover:text-white" style={{ textRendering: 'optimizeLegibility' }}>
               THE AI GTM PLATFORM TURNING ANONYMOUS TRAFFIC INTO QUALIFIED PIPELINE
             </h2>
 
-            <div className="mt-20 hidden lg:block lg:-ml-56 lg:w-full lg:text-center">
+            <div className="mt-20 hidden lg:block lg:-translate-x-56 lg:w-full lg:text-center">
                <div className="text-white/38 text-[15px] mb-3">© Outmate {currentYear}</div>
                <div className="flex gap-8 lg:justify-center">
                  {['Privacy Policy', 'Terms', 'Contact'].map(link => (
