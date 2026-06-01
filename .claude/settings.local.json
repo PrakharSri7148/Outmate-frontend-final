@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(npx tsc *)",
-      "Bash(awk '/function GridBg/,/^}/' src/sections/home/FeatureShowcase.tsx)"
+      "Bash(awk '/function GridBg/,/^}/' src/sections/home/FeatureShowcase.tsx)",
+      "Bash(sed -n '670,700p' src/sections/home/PlatformSandbox.tsx)",
+      "Bash(sed -n '217,250p' src/sections/home/PlatformSandbox.tsx)"
     ]
   }
 }

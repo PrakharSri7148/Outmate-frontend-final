@@ -229,8 +229,8 @@ function TabButton({
       onClick={onClick}
       className={`group relative inline-flex items-center gap-2.5 rounded-full border px-4 py-2 text-[13px] font-semibold tracking-[-0.01em] transition-all ${
         active
-          ? 'border-black/8 bg-black text-white shadow-[0_12px_24px_rgba(15,23,42,0.12)]'
-          : 'border-black/8 bg-white text-black/58 hover:bg-black/4 hover:text-black'
+          ? 'border-black/15 bg-black text-white shadow-[0_12px_24px_rgba(15,23,42,0.12)]'
+          : 'border-black/20 bg-white text-black/58 shadow-[0_1px_2px_rgba(15,23,42,0.06)] hover:border-black/30 hover:bg-black/4 hover:text-black'
       }`}
     >
       <Icon className={`h-3.5 w-3.5 ${active ? 'text-white' : 'text-black/42'}`} />
@@ -671,18 +671,6 @@ function AnalyticsPanel() {
 export default function PlatformSandbox() {
   const [activeTab, setActiveTab] = useState<SandboxTabId>('visitor')
   const [liveIndex, setLiveIndex] = useState(0)
-
-  useEffect(() => {
-    const timer = window.setInterval(() => {
-      setActiveTab((current) => {
-        const currentIndex = sandboxTabs.findIndex((tab) => tab.id === current)
-        const nextIndex = (currentIndex + 1) % sandboxTabs.length
-        return sandboxTabs[nextIndex].id
-      })
-    }, 5000)
-
-    return () => window.clearInterval(timer)
-  }, [])
 
   useEffect(() => {
     const timer = window.setInterval(() => {

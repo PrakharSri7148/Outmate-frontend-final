@@ -558,7 +558,7 @@ export default function HowItWorks() {
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <span className="inline-flex items-center rounded-full bg-blue-50 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-blue-600 ring-1 ring-blue-100">
+                  <span className="inline-flex items-center rounded-full bg-slate-100 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-slate-900 ring-1 ring-slate-200">
                     {step.badge}
                   </span>
 
@@ -586,9 +586,9 @@ export default function HowItWorks() {
                     ))}
                   </ul>
 
-                  <button className="group mt-9 inline-flex items-center gap-2 rounded-full bg-blue-600 px-5 py-2.5 text-[14px] font-semibold text-white shadow-[0_8px_22px_-8px_rgba(59,130,246,0.6)] transition-all hover:bg-blue-700 hover:shadow-[0_10px_26px_-8px_rgba(59,130,246,0.7)]">
+                  <button className="group mt-9 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-2.5 text-[14px] font-semibold text-slate-900 shadow-[0_1px_2px_rgba(15,23,42,0.04)] transition-all hover:border-slate-300 hover:bg-slate-50 hover:shadow-[0_8px_18px_-10px_rgba(15,23,42,0.22)]">
                     Learn more
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                    <ArrowRight className="h-4 w-4 text-slate-900 transition-transform group-hover:translate-x-0.5" />
                   </button>
                 </motion.div>
               </AnimatePresence>

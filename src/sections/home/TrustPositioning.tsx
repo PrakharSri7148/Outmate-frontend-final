@@ -15,10 +15,10 @@ const items = [
     description: "Activate outbound workflows the moment intent spikes — before competitors even notice the account."
   },
   {
-    number: "32M+",
-    label: "Contacts Enriched",
-    headline: "Enrichment at enterprise scale.",
-    description: "Map visitors directly to verified decision makers using real-time enrichment infrastructure."
+    number: "200M+",
+    label: "Verified Contacts",
+    headline: "Every visitor, matched to a 200M+ contact graph",
+    description: "We resolve identified visitors against 200M+ verified B2B profiles — surfacing the right person, role, and company behind the click, with contact details ready to action"
   },
   {
     number: "18%",
