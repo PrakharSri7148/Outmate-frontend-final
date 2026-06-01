@@ -70,7 +70,7 @@ export default function WorkflowIntegrations() {
   const reduceMotion = useReducedMotion()
 
   return (
-    <section className="relative overflow-hidden bg-white py-24 md:py-32">
+    <section className="relative overflow-hidden bg-white pt-12 md:pt-16 pb-24 md:pb-32">
       <div className="relative mx-auto max-w-[1280px] px-5 md:px-8">
         {/* Heading */}
         <motion.div

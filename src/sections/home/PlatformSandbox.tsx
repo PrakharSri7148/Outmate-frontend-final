@@ -338,7 +338,7 @@ function EnrichmentPanel() {
   return (
     <PanelFrame title="Database Enrichment" subtitle="Apollo-like data density with scoring, contact channels, and social context.">
       <div className="overflow-hidden rounded-[24px] border border-black/8 bg-[#FCFCFD]">
-        <div className="grid grid-cols-[1fr_1fr_1fr_1.35fr_1fr_1.25fr_0.55fr] border-b border-black/6 bg-black/[0.02] px-4 py-3 text-[12px] font-semibold uppercase tracking-[0.16em] text-black/42">
+        <div className="grid grid-cols-[1fr_0.8fr_1.3fr_1.8fr_1.1fr_1.15fr_0.5fr] gap-x-3 border-b border-black/6 bg-black/[0.02] px-4 py-3 text-[12px] font-semibold uppercase tracking-[0.16em] text-black/42">
           <span>Name</span>
           <span>Company</span>
           <span>Role</span>
@@ -348,13 +348,13 @@ function EnrichmentPanel() {
           <span>Score</span>
         </div>
         {enrichmentRows.map((row, index) => (
-          <div key={row.email} className={`grid grid-cols-[1fr_1fr_1fr_1.35fr_1fr_1.25fr_0.55fr] items-center px-4 py-3.5 text-[14px] ${index !== enrichmentRows.length - 1 ? 'border-b border-black/6' : ''}`}>
-            <div className="font-medium text-black">{row.name}</div>
-            <div className="text-black/68">{row.company}</div>
-            <div className="text-black/68">{row.role}</div>
-            <div className="text-black/62">{row.email}</div>
-            <div className="text-black/62">{row.phone}</div>
-            <div className="text-black/60">{row.linkedin}</div>
+          <div key={row.email} className={`grid grid-cols-[1fr_0.8fr_1.3fr_1.8fr_1.1fr_1.15fr_0.5fr] gap-x-3 items-center px-4 py-3.5 text-[14px] ${index !== enrichmentRows.length - 1 ? 'border-b border-black/6' : ''}`}>
+            <div className="min-w-0 truncate font-medium text-black">{row.name}</div>
+            <div className="min-w-0 truncate text-black/68">{row.company}</div>
+            <div className="min-w-0 truncate text-black/68">{row.role}</div>
+            <div className="min-w-0 truncate text-black/62">{row.email}</div>
+            <div className="min-w-0 truncate text-black/62">{row.phone}</div>
+            <div className="min-w-0 truncate text-black/60">{row.linkedin}</div>
             <div>
               <span className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[12px] font-semibold text-emerald-700">{row.score}</span>
             </div>
@@ -736,7 +736,7 @@ export default function PlatformSandbox() {
         }}
       />
 
-      <div className="relative mx-auto w-[90%] max-w-[1600px]">
+      <div className="relative mx-auto w-[90%] max-w-[1600px]" style={{ zoom: 0.8 }}>
         <div className="mx-auto flex max-w-[960px] flex-col items-center text-center">
           <SectionPill>Platform Experience</SectionPill>
           <h2 className="mt-7 font-display text-[clamp(3rem,7vw,6.8rem)] font-semibold leading-[0.9] tracking-[-0.08em] text-black">

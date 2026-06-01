@@ -79,10 +79,10 @@
 @layer components {
   /* Liquid Glass - Apple-inspired navbar */
   .nav-panel {
-    margin: 16px auto;
-    max-width: 1280px;
-    padding: 10px 18px;
-    border-radius: 24px;
+    margin: 12px auto;
+    max-width: 1200px;
+    padding: 6px 14px;
+    border-radius: 20px;
     background: rgba(20, 20, 22, 0.6);
     backdrop-filter: blur(24px) saturate(1.06);
     -webkit-backdrop-filter: blur(24px) saturate(1.06);
@@ -99,21 +99,21 @@
     background: rgba(20, 20, 22, 0.68);
     backdrop-filter: blur(28px) saturate(1.08);
     -webkit-backdrop-filter: blur(28px) saturate(1.08);
-    padding: 8px 16px;
-    border-radius: 20px;
+    padding: 4px 12px;
+    border-radius: 18px;
     transform: translateY(-4px) scale(0.995);
   }
 
   /* Ensure nav sits over content but doesn't cover too much */
   nav > .container-limit {
-    padding-top: 12px;
-    padding-bottom: 12px;
+    padding-top: 8px;
+    padding-bottom: 8px;
   }
 
   /* Nav items and subtle pill active indicator */
   .nav-item {
     position: relative;
-    padding: 8px 10px;
+    padding: 6px 8px;
     color: var(--text-secondary);
     transition:
       color 280ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -206,7 +206,8 @@
   .navbar-cta {
     background: #ffffff;
     color: #0f0f10;
-    padding: 12px 22px;
+    padding: 8px 18px;
+    font-size: 0.875rem;
     border-radius: 9999px;
     font-weight: 600;
     transform-origin: center;

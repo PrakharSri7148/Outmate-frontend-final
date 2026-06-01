@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import styles from './HeroSection.module.css'
+import { Entropy } from '@/components/ui/Entropy'
 
 const trustBadges = [
   { label: 'SOC 2 Type II', icon: 'shield' },
@@ -164,6 +165,7 @@ export default function HeroSection() {
 
   return (
     <section ref={sectionRef} className={`${styles.section} ${isVisible ? styles.visible : ''}`}>
+      <Entropy />
       <ConstellationBackground />
       <div aria-hidden className={styles.ambientGlow} />
       <div aria-hidden className={styles.noise} />

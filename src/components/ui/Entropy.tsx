@@ -19,10 +19,10 @@ interface Particle {
   vy: number;
 }
 
-const PARTICLE_COLOR = '#312E81'; // Dark purple-blue (indigo-900)
-const GRID_SIZE = 45;
-const PARTICLE_SIZE = 1.5;
-const CONNECT_DISTANCE = 70;
+const PARTICLE_COLOR = '#4F46E5' // Outmate brand blue
+const GRID_SIZE = 48
+const PARTICLE_SIZE = 1.4
+const CONNECT_DISTANCE = 75
 
 export const Entropy: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -202,8 +202,12 @@ export const Entropy: React.FC = () => {
   return (
     <div 
       ref={containerRef} 
-      className="absolute inset-0 h-full w-full pointer-events-none" 
+      className="absolute inset-0 h-full w-full pointer-events-none opacity-60" 
       aria-hidden="true"
+      style={{
+        maskImage: 'radial-gradient(circle at 50% 45%, transparent 10%, black 40%, black 90%, transparent 100%)',
+        WebkitMaskImage: 'radial-gradient(circle at 50% 45%, transparent 10%, black 40%, black 90%, transparent 100%)',
+      }}
     >
       <canvas
         ref={canvasRef}
@@ -212,7 +216,6 @@ export const Entropy: React.FC = () => {
           height: '100%',
           display: 'block',
         }}
-        className="opacity-90"
       />
     </div>
   );

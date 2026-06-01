@@ -3,9 +3,9 @@
 .section {
   position: relative;
   overflow: hidden;
-  padding: 118px 24px 96px;
+  padding: 106px 24px 86px;
   color: #0a0a23;
-  background: radial-gradient(120% 90% at 50% 0%, #fbfcff, #eef2fb 70%);
+  background: linear-gradient(90deg, #ffffff 0%, #ffffff 50%, #fbfcff 75%, #eef2fb 100%);
 }
 
 .section::before {
@@ -14,7 +14,7 @@
   inset: 0;
   background-image: radial-gradient(circle, rgba(203, 213, 225, 0.9) 0.95px, transparent 1px);
   background-size: 24px 24px;
-  opacity: 0.38;
+  opacity: 0.2;
   mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.36), rgba(0, 0, 0, 0.92) 28%, rgba(0, 0, 0, 0.68) 72%, rgba(0, 0, 0, 0.18));
   pointer-events: none;
 }
@@ -39,6 +39,8 @@
   background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.9) 0%, rgba(224, 231, 255, 0.45) 24%, rgba(219, 234, 254, 0.18) 46%, transparent 72%);
   filter: blur(16px);
   pointer-events: none;
+  mask-image: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.2) 20%, black 50%);
+  -webkit-mask-image: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.2) 20%, black 50%);
 }
 
 .noise {
@@ -69,6 +71,8 @@
   background: radial-gradient(closest-side, rgba(99, 102, 241, 0.16), transparent 70%);
   filter: blur(10px);
   pointer-events: none;
+  mask-image: linear-gradient(to right, transparent, black 50%);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 50%);
 }
 
 .constellationSvg {
@@ -144,15 +148,15 @@
 .eyebrow {
   display: inline-flex;
   align-items: center;
-  min-height: 36px;
-  padding: 0 16px;
+  min-height: 32px;
+  padding: 0 14px;
   border: 1px solid rgba(79, 70, 229, 0.16);
   border-radius: 9999px;
   background: rgba(255, 255, 255, 0.94);
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
   color: #4f46e5;
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.72rem;
+  font-size: 0.65rem;
   font-weight: 800;
   letter-spacing: 0.14em;
   line-height: 1;
@@ -164,10 +168,10 @@
   flex-direction: column;
   gap: 0.08em;
   max-width: 980px;
-  margin: 18px 0 0;
+  margin: 16px 0 0;
   color: #000000;
   font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(3rem, 6.8vw, 6.9rem);
+  font-size: clamp(2.7rem, 6.12vw, 6.21rem);
   font-weight: 600;
   letter-spacing: -0.08em;
   line-height: 0.9;
@@ -191,10 +195,10 @@
 
 .subheadline {
   max-width: 700px;
-  margin: 24px 0 0;
+  margin: 22px 0 0;
   color: #4b5563;
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: clamp(1.05rem, 1.55vw, 1.2rem);
+  font-size: clamp(0.95rem, 1.4vw, 1.08rem);
   font-weight: 400;
   line-height: 1.62;
   opacity: 0;
@@ -205,9 +209,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 14px;
   width: 100%;
-  margin-top: 38px;
+  margin-top: 34px;
   opacity: 0;
   transform: translateY(14px);
 }
@@ -217,12 +221,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  min-height: 56px;
-  padding: 16px 32px;
-  border-radius: 14px;
+  gap: 9px;
+  min-height: 50px;
+  padding: 14px 29px;
+  border-radius: 13px;
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1;
@@ -272,10 +276,10 @@
 }
 
 .trustLine {
-  margin: 16px 0 0;
+  margin: 14px 0 0;
   color: #6b7280;
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.92rem;
+  font-size: 0.83rem;
   font-weight: 500;
   line-height: 1.4;
   opacity: 0;
@@ -287,10 +291,10 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 11px;
   width: 100%;
   max-width: 980px;
-  margin: 28px auto 0;
+  margin: 25px auto 0;
   padding: 0;
   list-style: none;
 }
@@ -298,16 +302,16 @@
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  min-height: 40px;
-  padding: 0 14px;
+  gap: 7px;
+  min-height: 36px;
+  padding: 0 13px;
   border: 1px solid rgba(148, 163, 184, 0.28);
   border-radius: 9999px;
   background: rgba(255, 255, 255, 0.96);
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
   color: #111827;
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.81rem;
   font-weight: 600;
   line-height: 1;
   opacity: 0;
@@ -329,8 +333,8 @@
 .badgeIcon {
   display: inline-flex;
   flex: 0 0 auto;
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   color: #94a3b8;
 }
 
@@ -391,17 +395,17 @@
 
 @media (max-width: 900px) {
   .section {
-    padding-top: 100px;
-    padding-bottom: 84px;
+    padding-top: 90px;
+    padding-bottom: 76px;
   }
 
   .headline {
-    font-size: clamp(2.7rem, 8.8vw, 4.9rem);
+    font-size: clamp(2.43rem, 7.92vw, 4.41rem);
   }
 
   .subheadline {
     max-width: 620px;
-    font-size: 1.05rem;
+    font-size: 0.95rem;
   }
 }
 
@@ -569,12 +573,12 @@
 
 @media (max-width: 1024px) {
   .section {
-    padding-top: 132px;
-    padding-bottom: 118px;
+    padding-top: 119px;
+    padding-bottom: 106px;
   }
 
   .headline {
-    font-size: clamp(3rem, 8.3vw, 6.4rem);
+    font-size: clamp(2.7rem, 7.47vw, 5.76rem);
   }
 
   .features {

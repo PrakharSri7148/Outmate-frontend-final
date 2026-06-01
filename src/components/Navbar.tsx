@@ -105,15 +105,15 @@ export default function Navbar() {
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all`}> 
       <div className="container-limit">
-        <div className={`nav-panel flex items-center justify-between transition-all duration-300 ${scrolled || !isHome ? 'scrolled' : ''} h-16 lg:h-18`}> 
+        <div className={`nav-panel flex items-center justify-between transition-all duration-300 ${scrolled || !isHome ? 'scrolled' : ''} h-14 lg:h-14`}> 
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2.5 font-display text-lg font-semibold tracking-tight text-text-primary nav-item no-underline">
-          <img src="/images/logo.jpeg" alt="Outmate Logo" className="w-7 h-7 rounded-lg object-cover shadow-md shadow-purple/10" />
+        <Link to="/" className="flex items-center gap-2 font-display text-base font-semibold tracking-tight text-text-primary nav-item no-underline">
+          <img src="/images/logo.jpeg" alt="Outmate Logo" className="w-6 h-6 rounded-lg object-cover shadow-md shadow-purple/10" />
           Outmate
         </Link>
 
         {/* Center Nav - Desktop */}
-        <div className="hidden lg:flex items-center gap-1">
+        <div className="hidden lg:flex items-center gap-0.5">
           {/* Product Dropdown */}
           <div
             className="relative"

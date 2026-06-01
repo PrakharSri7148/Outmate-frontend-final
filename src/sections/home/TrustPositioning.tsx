@@ -85,7 +85,7 @@ export default function TrustPositioning() {
                   }}
                   className="absolute inset-0 flex flex-col justify-center pointer-events-none"
                 >
-                  <div className="relative inline-block">
+                  <div className="relative inline-block w-fit">
                     {/* Active Card Texture (visible when opacity is high) */}
                     <motion.div 
                       className="absolute -inset-x-12 -inset-y-8 bg-[#0b0b0b] rounded-[4px] -z-10 overflow-hidden"
@@ -99,7 +99,7 @@ export default function TrustPositioning() {
                       <div className="absolute inset-0 bg-[linear-gradient(transparent_0%,rgba(124,255,203,0.05)_50%,transparent_100%)] bg-[length:100%_4px] animate-pulse" />
                     </motion.div>
 
-                    <h3 className="text-[140px] md:text-[180px] lg:text-[240px] font-[750] tracking-[-0.08em] leading-[0.85] text-black transition-colors duration-500">
+                    <h3 className={`${item.number.length >= 5 ? 'text-[110px] md:text-[140px] lg:text-[190px]' : 'text-[140px] md:text-[180px] lg:text-[240px]'} font-[750] tracking-[-0.08em] leading-[0.85] text-black transition-colors duration-500`}>
                       <motion.span 
                         style={{ 
                           color: useTransform(smoothProgress, [start, (start + end) / 2, end], ["#000000", "#ffffff", "#000000"])

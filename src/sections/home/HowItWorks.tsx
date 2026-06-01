@@ -458,7 +458,7 @@ export default function HowItWorks() {
   }, [active, paused])
 
   return (
-    <section className="relative overflow-hidden bg-white py-24 md:py-32">
+    <section className="relative overflow-hidden bg-white pt-24 md:pt-32 pb-12 md:pb-16">
       {/* Ambient light background */}
       <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: 'none' }} />
       <div aria-hidden className="pointer-events-none absolute inset-0 opacity-0" style={{ backgroundImage: 'none' }} />

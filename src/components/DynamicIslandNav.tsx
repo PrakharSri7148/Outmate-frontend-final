@@ -86,7 +86,7 @@ export const DynamicIslandNav = () => {
         )}
       </AnimatePresence>
 
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[9999] pointer-events-none">
+      <div className="fixed bottom-8 inset-x-0 z-[9999] pointer-events-none flex justify-center">
         <motion.div
           layout
           initial={false}
@@ -122,10 +122,10 @@ export const DynamicIslandNav = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="flex items-center px-4 h-11 gap-3 whitespace-nowrap cursor-pointer hover:bg-white/[0.02] transition-colors"
+                  className="flex items-center justify-center gap-2.5 px-5 h-11 whitespace-nowrap cursor-pointer hover:bg-white/[0.02] transition-colors"
                 >
                   <CircleProgress progress={scrollProgress} />
-                  <div className="relative h-5 flex items-center overflow-hidden flex-1 min-w-0">
+                  <div className="relative h-5 flex items-center overflow-hidden -translate-y-px">
                     <AnimatePresence mode="wait">
                       <motion.span 
                         key={activeLabel}
