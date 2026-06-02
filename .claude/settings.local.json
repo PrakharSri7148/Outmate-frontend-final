@@ -4,7 +4,28 @@
       "Bash(npx tsc *)",
       "Bash(awk '/function GridBg/,/^}/' src/sections/home/FeatureShowcase.tsx)",
       "Bash(sed -n '670,700p' src/sections/home/PlatformSandbox.tsx)",
-      "Bash(sed -n '217,250p' src/sections/home/PlatformSandbox.tsx)"
+      "Bash(sed -n '217,250p' src/sections/home/PlatformSandbox.tsx)",
+      "Bash(git push *)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'Remove unused useMemo import in Entropy *)",
+      "WebFetch(domain:www.rb2b.com)",
+      "WebFetch(domain:www.getkoala.com)",
+      "WebFetch(domain:www.warmly.ai)",
+      "WebFetch(domain:www.dealfront.com)",
+      "WebFetch(domain:www.snitcher.com)",
+      "WebFetch(domain:www.albacross.com)",
+      "WebFetch(domain:www.clay.com)",
+      "WebFetch(domain:www.apollo.io)",
+      "WebFetch(domain:www.commonroom.io)",
+      "WebFetch(domain:www.default.com)",
+      "WebFetch(domain:www.unifygtm.com)",
+      "WebFetch(domain:www.leadfeeder.com)",
+      "WebFetch(domain:withvector.com)",
+      "WebFetch(domain:www.factors.ai)",
+      "WebFetch(domain:www.instantly.ai)",
+      "WebFetch(domain:www.smartlead.ai)",
+      "WebFetch(domain:www.artisan.co)",
+      "WebFetch(domain:www.6sense.com)"
     ]
   }
 }

@@ -7,6 +7,10 @@ import CoPilot from './pages/CoPilot'
 import VoiceAIAgent from './pages/VoiceAIAgent'
 import SocialAgent from './pages/SocialAgent'
 import SalesTeam from './pages/SalesTeam'
+import IdentifyVisitors from './pages/IdentifyVisitors'
+import EnrichRouteLeads from './pages/EnrichRouteLeads'
+import AutomateWorkflows from './pages/AutomateWorkflows'
+import AIOutbound from './pages/AIOutbound'
 import Pricing from './pages/Pricing'
 import Compare from './pages/Compare'
 import RB2BCompare from './pages/RB2BCompare'
@@ -19,6 +23,8 @@ import { BookDemoPage } from './pages/BookDemo'
 export default function App() {
   return (
     <Routes>
+      <Route path="/use-cases/identify-visitors" element={<IdentifyVisitors />} />
+      <Route path="/use-cases/automate-workflows" element={<AutomateWorkflows />} />
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
         <Route path="/product/website-identification" element={<WebsiteIdentification />} />
@@ -27,6 +33,8 @@ export default function App() {
         <Route path="/product/voice-ai-agent" element={<VoiceAIAgent />} />
         <Route path="/product/social-agent" element={<SocialAgent />} />
         <Route path="/product/workflow-automation" element={<WorkflowAutomation />} />
+        <Route path="/use-cases/enrich-route-leads" element={<EnrichRouteLeads />} />
+        <Route path="/use-cases/ai-outbound" element={<AIOutbound />} />
         <Route path="/use-cases/sales-team" element={<SalesTeam />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/compare" element={<Compare />} />
