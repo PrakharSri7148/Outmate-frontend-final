@@ -28,6 +28,7 @@ export default function App() {
       <Route path="/use-cases/automate-workflows" element={<AutomateWorkflows />} />
       <Route path="/use-cases/enrich-route-leads" element={<EnrichRouteLeads />} />
       <Route path="/use-cases/sales-team" element={<SalesTeam />} />
+      <Route path="/use-cases/ai-outbound" element={<AIOutbound />} />
       <Route element={<Layout />}>
         <Route path="/product/website-identification" element={<WebsiteIdentification />} />
         <Route path="/product/b2b-database" element={<B2BDatabase />} />
@@ -35,7 +36,6 @@ export default function App() {
         <Route path="/product/voice-ai-agent" element={<VoiceAIAgent />} />
         <Route path="/product/social-agent" element={<SocialAgent />} />
         <Route path="/product/workflow-automation" element={<WorkflowAutomation />} />
-        <Route path="/use-cases/ai-outbound" element={<AIOutbound />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/compare" element={<Compare />} />
         <Route path="/compare/everyone" element={<CompareEveryone />} />
