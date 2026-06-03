@@ -103,8 +103,7 @@ const AutomateWorkflows: React.FC = () => {
         if (spark && i > 0 && i < nodes.length) {
           const first = (nodes[0] as HTMLElement).getBoundingClientRect();
           const cur = (nodes[i] as HTMLElement).getBoundingClientRect();
-          const flowRect = flow.getBoundingClientRect();
-          
+
           // Calculate drop distance relative to the first node
           spark.style.setProperty('--drop', `${cur.top - first.top}px`);
           // Set spark initial position relative to flow container

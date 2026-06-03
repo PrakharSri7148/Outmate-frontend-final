@@ -23,10 +23,10 @@ import { BookDemoPage } from './pages/BookDemo'
 export default function App() {
   return (
     <Routes>
+      <Route path="/" element={<Home />} />
       <Route path="/use-cases/identify-visitors" element={<IdentifyVisitors />} />
       <Route path="/use-cases/automate-workflows" element={<AutomateWorkflows />} />
       <Route element={<Layout />}>
-        <Route path="/" element={<Home />} />
         <Route path="/product/website-identification" element={<WebsiteIdentification />} />
         <Route path="/product/b2b-database" element={<B2BDatabase />} />
         <Route path="/product/co-pilot" element={<CoPilot />} />

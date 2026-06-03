@@ -1,0 +1,132 @@
+/* ============================================================
+   OUTMATE SiteNav — shared top chrome (promobar + navbar + mobile menu)
+   Everything is scoped under .site-chrome so it can mount on ANY page
+   without depending on .home-root and without leaking globally.
+   Tokens are defined locally on .site-chrome (NOT on :root).
+   Keyframes are prefixed `sn-` to avoid colliding with ported pages.
+   ============================================================ */
+
+.site-chrome{
+  --paper:#FFFFFF;
+  --paper-2:#F1F1F1;
+  --ink:#0A0A0A;
+  --muted:#8C8C8C;
+  --line:rgba(0,0,0,.14);
+  --line-soft:rgba(0,0,0,.08);
+  --accent:#5046E6;
+  --sans:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  --body:"Hanken Grotesk",-apple-system,system-ui,sans-serif;
+  --mono:"Space Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --pad:clamp(12px,2.5vw,32px);
+  --radius:14px;
+}
+.site-chrome *{ box-sizing:border-box; }
+.site-chrome a{ color:inherit; text-decoration:none; }
+.site-chrome img{ display:block; max-width:100%; }
+
+/* ---------- shared buttons / pills used inside the nav ---------- */
+.site-chrome .btn{
+  display:inline-flex; align-items:center; gap:8px;
+  height:40px; padding:0 18px; border-radius:40px;
+  background:var(--ink); color:#fff;
+  font-family:var(--mono); font-size:11px; letter-spacing:.05em; text-transform:uppercase;
+  white-space:nowrap;
+  transition:background .25s,transform .2s;
+}
+.site-chrome .btn:hover{ background:var(--accent); transform:translateY(-2px); }
+.site-chrome .btn.solid{ background:var(--accent); }
+.site-chrome .btn.solid:hover{ background:var(--ink); }
+
+.site-chrome .pill{
+  display:inline-flex; align-items:center; gap:.55em;
+  height:38px; padding:0 16px;
+  background:var(--paper); color:var(--ink);
+  border-radius:40px;
+  font-family:var(--mono); font-size:12px; letter-spacing:.04em;
+  text-transform:uppercase;
+  box-shadow:0 1px 0 rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+  border:1px solid var(--line-soft);
+  transition:background .25s,color .25s,transform .25s;
+  white-space:nowrap;
+}
+.site-chrome .pill:hover{ background:var(--ink); color:#fff; }
+.site-chrome .pill .ast{ color:var(--accent); font-size:14px; }
+
+/* ---------- promo bar ---------- */
+.site-chrome .promobar{
+  position:fixed; top:0; left:0; right:0; z-index:90;
+  height:32px; background:var(--ink); color:#fff; overflow:hidden;
+  display:flex; align-items:center;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.site-chrome .promobar .pm-track{
+  display:flex; align-items:center; gap:0; white-space:nowrap;
+  width:max-content; animation:sn-scrollx 36s linear infinite;
+}
+.site-chrome .promobar:hover .pm-track{ animation-play-state:paused; }
+.site-chrome .pm-item{ display:inline-flex; align-items:center; gap:12px; padding:0 24px; font-family:var(--mono); font-size:10px; letter-spacing:.03em; }
+.site-chrome .pm-item .badge{ background:var(--accent); color:#fff; border-radius:30px; padding:2px 8px; font-size:9px; letter-spacing:.08em; text-transform:uppercase; }
+.site-chrome .pm-item .pm-cta{ color:var(--accent); text-transform:uppercase; letter-spacing:.06em; }
+.site-chrome .pm-item .sep{ color:rgba(255,255,255,.3); }
+@keyframes sn-scrollx{ from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
+
+/* ---------- navbar ---------- */
+.site-chrome .navbar{
+  position:fixed; top:32px; left:0; right:0; z-index:80;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px; padding:10px clamp(14px,2.5vw,30px);
+  background:rgba(231,231,231,.82); backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line-soft);
+  transition:background .3s, box-shadow .3s, padding .3s;
+}
+.site-chrome .navbar.scrolled{ background:rgba(255,255,255,.9); box-shadow:0 4px 20px rgba(0,0,0,.06); padding-top:8px; padding-bottom:8px; }
+.site-chrome .nav-logo{ display:flex; align-items:center; gap:8px; font-family:var(--sans); font-weight:700; font-size:17px; letter-spacing:-.02em; flex:0 0 auto; }
+.site-chrome .nav-logo .mk{ width:17px; height:17px; border-radius:7px; background:var(--ink); color:#fff; display:grid; place-items:center; font-size:12px; }
+.site-chrome .nav-links{ display:flex; align-items:center; gap:0; flex:1; justify-content:center; }
+.site-chrome .nav-item{ position:relative; }
+.site-chrome .nav-trigger{
+  display:inline-flex; align-items:center; gap:6px; cursor:pointer;
+  background:none; border:0; font-family:var(--mono); font-size:10px;
+  letter-spacing:.04em; text-transform:uppercase; color:var(--ink);
+  padding:7px 12px; border-radius:9px; transition:background .2s;
+  white-space:nowrap;
+}
+.site-chrome .nav-trigger:hover, .site-chrome .nav-item:hover .nav-trigger{ background:rgba(0,0,0,.05); }
+.site-chrome .nav-trigger .chev{ font-size:9px; transition:transform .25s; opacity:.5; }
+.site-chrome .nav-item:hover .nav-trigger .chev{ transform:rotate(180deg); }
+
+.site-chrome .nav-dd{
+  position:absolute; top:calc(100% + 10px); left:50%; transform:translateX(-50%) translateY(8px);
+  min-width:330px; background:var(--paper); border:1px solid var(--line-soft);
+  border-radius:16px; box-shadow:0 24px 60px -18px rgba(0,0,0,.28);
+  padding:10px; opacity:0; visibility:hidden; pointer-events:none;
+  transition:opacity .22s ease, transform .22s ease; z-index:95;
+}
+.site-chrome .nav-item:hover .nav-dd{ opacity:1; visibility:visible; transform:translateX(-50%) translateY(0); pointer-events:auto; }
+.site-chrome .nav-dd.wide{ min-width:380px; }
+.site-chrome .dd-link{ display:flex; gap:13px; align-items:flex-start; padding:12px 14px; border-radius:11px; transition:background .18s; }
+.site-chrome .dd-link:hover{ background:var(--paper-2); }
+.site-chrome .dd-ico{ width:34px; height:34px; flex:0 0 auto; border-radius:9px; background:var(--ink); color:#fff; display:grid; place-items:center; font-family:var(--mono); font-size:14px; }
+.site-chrome .dd-link:hover .dd-ico{ background:var(--accent); }
+.site-chrome .dd-txt .t{ font-family:var(--sans); font-weight:700; font-size:14px; letter-spacing:-.01em; line-height:1.2; }
+.site-chrome .dd-txt .d{ font-family:var(--body); font-size:12px; color:var(--muted); line-height:1.4; margin-top:3px; }
+.site-chrome .nav-cta{ display:flex; align-items:center; gap:10px; flex:0 0 auto; }
+
+.site-chrome .nav-burger{ display:none; background:none; border:0; cursor:pointer; flex-direction:column; gap:5px; padding:8px; }
+.site-chrome .nav-burger span{ width:22px; height:2px; background:var(--ink); display:block; transition:.25s; }
+.site-chrome .mobile-menu{ display:none; }
+
+@media (max-width:1080px){
+  .site-chrome .nav-links{ display:none; }
+  .site-chrome .nav-cta .btn.demo{ display:none; }
+  .site-chrome .nav-burger{ display:flex; }
+  .site-chrome .mobile-menu{
+    display:block; position:fixed; inset:104px 0 0 0; z-index:85;
+    background:var(--paper); padding:24px; overflow-y:auto;
+    transform:translateX(100%); transition:transform .3s ease;
+  }
+  .site-chrome .mobile-menu.open{ transform:none; }
+  .site-chrome .mm-group{ border-bottom:1px solid var(--line); padding:16px 0; }
+  .site-chrome .mm-group h4{ font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin:0 0 12px; }
+  .site-chrome .mm-group a{ display:block; font-family:var(--sans); font-weight:600; font-size:17px; padding:8px 0; }
+}
