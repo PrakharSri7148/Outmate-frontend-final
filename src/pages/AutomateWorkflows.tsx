@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import SiteNav from '../components/SiteNav';
 import './automate-workflows.css';
 
 const AutomateWorkflows: React.FC = () => {
@@ -133,17 +134,9 @@ const AutomateWorkflows: React.FC = () => {
 
   return (
     <div className="gtm-root">
-      <nav className="topbar">
-        <a href="/" className="pill brand">
-          <span className="ast">✳</span> OUTMATE
-        </a>
-        <div className="nav-actions">
-          <a href="/pricing" className="pill">Pricing</a>
-          <a href="/book-demo" className="pill">Book Demo</a>
-        </div>
-      </nav>
+      <SiteNav />
 
-      <main className="page">
+      <main className="page" style={{ paddingTop: 'calc(40px + 72px + var(--pad))' }}>
         {/* HERO */}
         <section className="hero">
           <div className="hero-top"></div>

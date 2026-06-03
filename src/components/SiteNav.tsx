@@ -26,6 +26,66 @@ export default function SiteNav() {
     onNavScroll()
     cleanups.push(() => window.removeEventListener('scroll', onNavScroll))
 
+    /* ---------- dropdown hover-intent + keyboard ---------- */
+    const items = Array.from(root.querySelectorAll<HTMLElement>('.nav-links .nav-item'))
+    items.forEach((item) => {
+      // only items that actually have a dropdown panel
+      if (!item.querySelector('.nav-dd')) return
+      let hideTimer: ReturnType<typeof setTimeout> | null = null
+      const clearHide = () => {
+        if (hideTimer) {
+          clearTimeout(hideTimer)
+          hideTimer = null
+        }
+      }
+      const open = () => {
+        clearHide()
+        item.classList.add('open')
+      }
+      const scheduleClose = () => {
+        clearHide()
+        hideTimer = setTimeout(() => item.classList.remove('open'), 180)
+      }
+      const onEnter = () => open()
+      const onLeave = () => scheduleClose()
+      const onFocusIn = () => open()
+      const onFocusOut = (e: FocusEvent) => {
+        // close only when focus moves outside this nav-item
+        if (!item.contains(e.relatedTarget as Node)) scheduleClose()
+      }
+      const onLinkClick = () => {
+        clearHide()
+        item.classList.remove('open')
+      }
+      const ddLinks = Array.from(item.querySelectorAll('a'))
+      ddLinks.forEach((a) => a.addEventListener('click', onLinkClick))
+      item.addEventListener('mouseenter', onEnter)
+      item.addEventListener('mouseleave', onLeave)
+      item.addEventListener('focusin', onFocusIn)
+      item.addEventListener('focusout', onFocusOut)
+      cleanups.push(() => {
+        clearHide()
+        ddLinks.forEach((a) => a.removeEventListener('click', onLinkClick))
+        item.removeEventListener('mouseenter', onEnter)
+        item.removeEventListener('mouseleave', onLeave)
+        item.removeEventListener('focusin', onFocusIn)
+        item.removeEventListener('focusout', onFocusOut)
+      })
+    })
+    const closeAll = () => items.forEach((i) => i.classList.remove('open'))
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeAll()
+    }
+    const onDocClick = (e: MouseEvent) => {
+      if (!root.contains(e.target as Node)) closeAll()
+    }
+    document.addEventListener('keydown', onKeyDown)
+    document.addEventListener('click', onDocClick)
+    cleanups.push(() => {
+      document.removeEventListener('keydown', onKeyDown)
+      document.removeEventListener('click', onDocClick)
+    })
+
     /* ---------- mobile menu ---------- */
     const burger = root.querySelector('#burger')
     const mm = root.querySelector('#mobileMenu')

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import SiteNav from '../components/SiteNav';
 import './identify-visitors.css';
 
 export default function IdentifyVisitors() {
@@ -73,16 +74,10 @@ export default function IdentifyVisitors() {
 
   return (
     <div className="vid-root" id="top" ref={rootRef}>
-      {/* ===================== NAV ===================== */}
-      <header className="topbar">
-        <a href="#top" className="pill brand">OUTMATE_AI</a>
-        <nav className="nav-actions">
-          <a href="#how" className="pill">HOW IT WORKS&nbsp;↓</a>
-          <Link to="/book-demo" className="pill about">START FREE&nbsp;→</Link>
-        </nav>
-      </header>
+      {/* ===================== NAV (shared site-wide) ===================== */}
+      <SiteNav />
 
-      <main className="page">
+      <main className="page" style={{ paddingTop: 'calc(40px + 72px + var(--pad))' }}>
 
         {/* ===================== 1 · HERO ===================== */}
         <section className="hero" data-screen-label="Hero">
