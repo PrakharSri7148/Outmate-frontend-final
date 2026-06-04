@@ -1838,15 +1838,6 @@ export default function Home() {
                 <p>AI GTM co-pilot that writes outreach automatically</p>
                 <span className="ea">Learn more →</span>
               </Link>
-              <Link className="ec" to="/product/voice-ai-agent">
-                <div className="ei">
-                  <span className="en">04</span>
-                  <span className="eico">◈</span>
-                </div>
-                <h4>Voice AI Agent</h4>
-                <p>Autonomous outbound calling, signal-triggered</p>
-                <span className="ea">Learn more →</span>
-              </Link>
               <Link className="ec" to="/product/social-agent">
                 <div className="ei">
                   <span className="en">05</span>
@@ -2321,9 +2312,6 @@ export default function Home() {
               </li>
               <li>
                 <Link to="/product/co-pilot">Co-Pilot</Link>
-              </li>
-              <li>
-                <Link to="/product/voice-ai-agent">Voice AI Agent</Link>
               </li>
               <li>
                 <Link to="/product/social-agent">Social Agent</Link>

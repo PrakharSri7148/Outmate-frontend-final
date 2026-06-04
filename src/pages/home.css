@@ -100,7 +100,7 @@
   overflow:hidden;
   margin-top:0;
 }
-.home-root .hero-top{ height:clamp(50px,7vw,84px); }
+.home-root .hero-top{ height:clamp(8px,1.5vw,18px); }
 
 .home-root .hero-headline{
   position:relative;
@@ -756,6 +756,9 @@
 .home-root{ padding-top:0; }
 .home-root .page{ padding-top:0; }
 
+/* scale only the navbar group (promobar + navbar + mobile menu) to 0.7; page body stays full size */
+.home-root .site-chrome{ zoom: 0.7; }
+
 .home-root .promobar{
   position:fixed; top:0; left:0; right:0; z-index:90;
   height:32px; background:var(--ink); color:#fff; overflow:hidden;
@@ -884,7 +887,7 @@
 @media (max-width:680px){ .home-root .island .isl-sub, .home-root .island .isl-dots{ display:none; } }
 
 /* OUTMATE HOME section styles */
-.home-root main{ padding:var(--pad); padding-top:calc(40px + 72px + var(--pad)); }
+.home-root main{ padding:var(--pad); padding-top:calc(40px + 72px + 8px); }
 .home-root .h-sec{ margin-top:var(--pad); }
 
 .home-root .hero.hhome{ border-radius:var(--radius) var(--radius) 0 0; border-bottom:0; }

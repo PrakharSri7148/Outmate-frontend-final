@@ -4,7 +4,6 @@ import Home from './pages/Home'
 import WebsiteIdentification from './pages/WebsiteIdentification'
 import B2BDatabase from './pages/B2BDatabase'
 import CoPilot from './pages/CoPilot'
-import VoiceAIAgent from './pages/VoiceAIAgent'
 import SocialAgent from './pages/SocialAgent'
 import SalesTeam from './pages/SalesTeam'
 import IdentifyVisitors from './pages/IdentifyVisitors'
@@ -29,13 +28,12 @@ export default function App() {
       <Route path="/use-cases/enrich-route-leads" element={<EnrichRouteLeads />} />
       <Route path="/use-cases/sales-team" element={<SalesTeam />} />
       <Route path="/use-cases/ai-outbound" element={<AIOutbound />} />
+      <Route path="/product/website-identification" element={<WebsiteIdentification />} />
+      <Route path="/product/b2b-database" element={<B2BDatabase />} />
+      <Route path="/product/co-pilot" element={<CoPilot />} />
+      <Route path="/product/workflow-automation" element={<WorkflowAutomation />} />
+      <Route path="/product/social-agent" element={<SocialAgent />} />
       <Route element={<Layout />}>
-        <Route path="/product/website-identification" element={<WebsiteIdentification />} />
-        <Route path="/product/b2b-database" element={<B2BDatabase />} />
-        <Route path="/product/co-pilot" element={<CoPilot />} />
-        <Route path="/product/voice-ai-agent" element={<VoiceAIAgent />} />
-        <Route path="/product/social-agent" element={<SocialAgent />} />
-        <Route path="/product/workflow-automation" element={<WorkflowAutomation />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/compare" element={<Compare />} />
         <Route path="/compare/everyone" element={<CompareEveryone />} />

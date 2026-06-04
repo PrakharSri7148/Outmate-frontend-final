@@ -12,7 +12,6 @@ export default function Footer() {
         { label: 'Website Identification', path: '#' },
         { label: 'B2B Database', path: '#' },
         { label: 'Co-Pilot', path: '#' },
-        { label: 'Voice AI Agent', path: '#' },
         { label: 'Social Agent', path: '#' },
         { label: 'Workflow Automation', path: '#' }
       ]

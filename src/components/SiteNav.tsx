@@ -165,13 +165,6 @@ export default function SiteNav() {
                   <span className="d">AI GTM co-pilot that writes outreach automatically</span>
                 </span>
               </Link>
-              <Link className="dd-link" to="/product/voice-ai-agent">
-                <span className="dd-ico">◈</span>
-                <span className="dd-txt">
-                  <span className="t">Voice AI Agent</span>
-                  <span className="d">Autonomous outbound calling, signal-triggered</span>
-                </span>
-              </Link>
               <Link className="dd-link" to="/product/social-agent">
                 <span className="dd-ico">@</span>
                 <span className="dd-txt">
@@ -307,7 +300,6 @@ export default function SiteNav() {
           <Link to="/product/website-identification">Website Identification</Link>
           <Link to="/product/b2b-database">B2B Database</Link>
           <Link to="/product/co-pilot">Co-Pilot</Link>
-          <Link to="/product/voice-ai-agent">Voice AI Agent</Link>
           <Link to="/product/social-agent">Social Agent</Link>
           <Link to="/product/workflow-automation">Workflow Automation</Link>
         </div>

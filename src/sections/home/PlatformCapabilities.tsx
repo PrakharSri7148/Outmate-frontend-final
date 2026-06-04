@@ -4,7 +4,6 @@ import {
   Radar,
   Database,
   Sparkles,
-  PhoneCall,
   AtSign,
   Workflow,
   Target,
@@ -43,12 +42,6 @@ const PRODUCTS: Capability[] = [
     href: '/product/co-pilot',
     description: 'AI GTM co-pilot that writes outreach automatically',
     icon: Sparkles,
-  },
-  {
-    title: 'Voice AI Agent',
-    href: '/product/voice-ai-agent',
-    description: 'Autonomous outbound calling, signal-triggered',
-    icon: PhoneCall,
   },
   {
     title: 'Social Agent',
