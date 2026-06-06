@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import LogoMarquee from '../sections/use-cases/components/LogoMarquee'
 import SiteNav from '../components/SiteNav'
 import './home.css'
 
@@ -1191,9 +1192,8 @@ export default function Home() {
             <div className="h-head reveal" style={{ textAlign: 'left', alignItems: 'flex-start', margin: 0 }}>
               <span className="h-eyebrow">How it works</span>
               <h2 className="h-title">
-                FROM ANONYMOUS CLICK
-                <br />
-                TO CLOSED DEAL.
+                <span className="block" style={{ whiteSpace: 'nowrap' }}>FROM ANONYMOUS CLICK</span>
+                <span className="block" style={{ whiteSpace: 'nowrap' }}>TO CLOSED DEAL.</span>
               </h2>
               <p className="h-sub">
                 One platform takes a visitor through every step — identified, qualified, enriched, engaged, and handed
@@ -1500,101 +1500,15 @@ export default function Home() {
           <div className="h-head reveal">
             <span className="h-eyebrow">Integrations</span>
             <h2 className="h-title">
-              Push your leads into
-              <br />
-              your favorite tools.
+              <span style={{ whiteSpace: 'nowrap', display: 'block' }}>Push Your Leads Into</span>
+              <span style={{ whiteSpace: 'nowrap', display: 'block' }}>Your Favorite Tools.</span>
             </h2>
             <p className="h-sub">
               Streamline your lead generation process by pushing your leads into your CRM, Slack, Email &amp; LinkedIn
               automation tools and more.
             </p>
           </div>
-          <div className="istrip">
-            <div className="itrack l">
-              <span className="ilogo">
-                <span className="gl">✉</span>Outlook
-              </span>
-              <span className="ilogo">
-                <span className="gl">◈</span>Lemlist
-              </span>
-              <span className="ilogo">
-                <span className="gl">⚡</span>Zapier
-              </span>
-              <span className="ilogo">
-                <span className="gl">◐</span>Intercom
-              </span>
-              <span className="ilogo">
-                <span className="gl">▦</span>Pipedrive
-              </span>
-              <span className="ilogo">
-                <span className="gl">☁</span>Salesforce
-              </span>
-              <span className="ilogo">
-                <span className="gl">✳</span>HubSpot
-              </span>
-              <span className="ilogo">
-                <span className="gl">✉</span>Outlook
-              </span>
-              <span className="ilogo">
-                <span className="gl">◈</span>Lemlist
-              </span>
-              <span className="ilogo">
-                <span className="gl">⚡</span>Zapier
-              </span>
-              <span className="ilogo">
-                <span className="gl">◐</span>Intercom
-              </span>
-              <span className="ilogo">
-                <span className="gl">▦</span>Pipedrive
-              </span>
-              <span className="ilogo">
-                <span className="gl">☁</span>Salesforce
-              </span>
-              <span className="ilogo">
-                <span className="gl">✳</span>HubSpot
-              </span>
-            </div>
-          </div>
-          <div className="istrip">
-            <div className="itrack r">
-              <span className="ilogo">
-                <span className="gl">⬡</span>Apollo
-              </span>
-              <span className="ilogo">
-                <span className="gl">▤</span>Google Analytics
-              </span>
-              <span className="ilogo">
-                <span className="gl">◈</span>Slack
-              </span>
-              <span className="ilogo">
-                <span className="gl">✉</span>Gmail
-              </span>
-              <span className="ilogo">
-                <span className="gl">in</span>LinkedIn
-              </span>
-              <span className="ilogo">
-                <span className="gl">▦</span>Excel
-              </span>
-              <span className="ilogo">
-                <span className="gl">⬡</span>Apollo
-              </span>
-              <span className="ilogo">
-                <span className="gl">▤</span>Google Analytics
-              </span>
-              <span className="ilogo">
-                <span className="gl">◈</span>Slack
-              </span>
-              <span className="ilogo">
-                <span className="gl">✉</span>Gmail
-              </span>
-              <span className="ilogo">
-                <span className="gl">in</span>LinkedIn
-              </span>
-              <span className="ilogo">
-                <span className="gl">▦</span>Excel
-              </span>
-            </div>
-          </div>
+          <LogoMarquee />
         </section>
 
         {/* ===================== 6 · FEATURE SHOWCASE (bento) ===================== */}
@@ -1947,9 +1861,8 @@ export default function Home() {
             <div className="h-head reveal" style={{ textAlign: 'left', alignItems: 'flex-start', margin: 0 }}>
               <span className="h-eyebrow">Use Cases</span>
               <h2 className="h-title">
-                Built for every team
-                <br />
-                running outbound
+                <span style={{ whiteSpace: 'nowrap', display: 'block' }}>Built For Every Team</span>
+                <span style={{ whiteSpace: 'nowrap', display: 'block' }}>Running Outbound.</span>
               </h2>
               <p className="h-sub">
                 Whether you&apos;re a founder, GTM lead, or RevOps team — Outmate runs the play.
@@ -2188,17 +2101,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ===================== 12 · TESTIMONIAL ===================== */}
-        <section className="bigquote h-sec" id="insights" data-screen-label="Testimonial">
-          <div className="qm">&quot;</div>
-          <q className="reveal">
-            We use Outmate to identify our anonymous website visitors. You can also see your web visitors 100% free.
-          </q>
-          <div className="attr reveal">
-            <b>Nathan Latka</b> · Founder, Founderpath.com
-          </div>
-        </section>
-
         {/* ===================== 13 · ANALYTICS ===================== */}
         <section className="analytics h-sec" data-screen-label="Analytics">
           <div className="an-top reveal">
@@ -2276,7 +2178,6 @@ export default function Home() {
 
         {/* ===================== 14 · SIGNAL ENGINE CTA ===================== */}
         <section className="signalcta h-sec" id="cta" data-screen-label="Signal Engine CTA">
-          <span className="ast">✳</span>
           <h2>
             Build your signal
             <br />
@@ -2297,9 +2198,6 @@ export default function Home() {
 
       {/* ===================== FOOTER ===================== */}
       <footer className="home-foot" id="footer" data-screen-label="Footer">
-        <div className="foot-hero">
-          <h2>THE AI GTM PLATFORM TURNING ANONYMOUS TRAFFIC INTO QUALIFIED PIPELINE</h2>
-        </div>
         <div className="foot-cols">
           <div className="fcol">
             <h5>Platform</h5>
