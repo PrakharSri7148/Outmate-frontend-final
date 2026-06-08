@@ -53,36 +53,8 @@ export default function Footer() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 mb-12 lg:mb-16">
 
-          {/* Left Column: Brand & Logo area */}
-          <div className="lg:col-span-5 flex flex-col items-start px-0">
-            <h2 className="text-[35px] md:text-[46px] lg:text-[82px] leading-[0.80] tracking-[-0.1em] lg:-ml-16 uppercase font-[900] text-white/96 max-w-[1050px] transition-all duration-500 hover:text-white" style={{ textRendering: 'optimizeLegibility' }}>
-              THE AI GTM PLATFORM TURNING ANONYMOUS TRAFFIC INTO QUALIFIED PIPELINE
-            </h2>
-
-            <div className="mt-16 hidden lg:block lg:-ml-16 lg:w-full lg:text-center">
-               <div className="text-white/38 text-[12px] mb-2.5">© Outmate {currentYear}</div>
-               <div className="flex gap-6 lg:justify-center">
-                 {['Privacy Policy', 'Terms', 'Contact'].map(link => (
-                   <Link key={link} to="#" className="text-[12px] text-white/38 hover:text-white/70 transition-colors duration-300 tracking-wide">{link}</Link>
-                 ))}
-               </div>
-               <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5 text-center">
-                 <span className="text-[14px] font-medium text-white">Sign up to our newsletter</span>
-                 <a
-                   href="https://www.linkedin.com/company/outmateai/posts/?feedView=all"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   className="inline-flex h-9 items-center justify-center gap-2 rounded-full border border-white/[0.15] bg-white/[0.04] px-4 text-[12px] font-medium text-white transition-colors hover:border-white/25 hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B0B0C]"
-                 >
-                   Follow on LinkedIn
-                   <ArrowRight className="h-3.5 w-3.5" />
-                 </a>
-               </div>
-            </div>
-          </div>
-
-          {/* Right Columns: Links & AI Assistant */}
-          <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 md:gap-10">
+          {/* Right Columns: Links & AI Assistant (expanded to full width) */}
+          <div className="lg:col-span-12 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 md:gap-10">
             {footerSections.map((section) => (
               <div key={section.title} className="flex flex-col">
                 <h4 className="text-[10px] tracking-[0.22em] uppercase font-semibold text-white/85 mb-6">{section.title}</h4>
@@ -138,6 +110,28 @@ export default function Footer() {
                 <span className="text-[19px] font-semibold tracking-[-0.05em] text-white">OUTMATE</span>
               </div>
             </div>
+          </div>
+
+          {/* Desktop Footer Bottom (copyright + links) */}
+          <div className="hidden lg:block col-span-12 border-t border-white/[0.03] pt-8 lg:-ml-16 lg:w-full lg:text-center">
+             <div className="text-white/38 text-[12px] mb-2.5">© Outmate {currentYear}</div>
+             <div className="flex gap-6 lg:justify-center">
+               {['Privacy Policy', 'Terms', 'Contact'].map(link => (
+                 <Link key={link} to="#" className="text-[12px] text-white/38 hover:text-white/70 transition-colors duration-300 tracking-wide">{link}</Link>
+               ))}
+             </div>
+             <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5 text-center">
+               <span className="text-[14px] font-medium text-white">Sign up to our newsletter</span>
+               <a
+                 href="https://www.linkedin.com/company/outmateai/posts/?feedView=all"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="inline-flex h-9 items-center justify-center gap-2 rounded-full border border-white/[0.15] bg-white/[0.04] px-4 text-[12px] font-medium text-white transition-colors hover:border-white/25 hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B0B0C]"
+               >
+                 Follow on LinkedIn
+                 <ArrowRight className="h-3.5 w-3.5" />
+               </a>
+             </div>
           </div>
 
           {/* Mobile Footer Bottom */}

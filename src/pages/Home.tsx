@@ -1,7 +1,5 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import LogoMarquee from '../sections/use-cases/components/LogoMarquee'
-import SiteNav from '../components/SiteNav'
 import './home.css'
 
 export default function Home() {
@@ -51,7 +49,126 @@ export default function Home() {
       revealEls.forEach((el) => el.classList.add('in'))
     }
 
-    /* navbar scroll state + mobile menu now live in the shared <SiteNav>. */
+    /* ---------- navbar scroll state ---------- */
+    const navbar = root.querySelector('#navbar')
+    const onNavScroll = () => {
+      if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 100)
+    }
+    window.addEventListener('scroll', onNavScroll, { passive: true })
+    onNavScroll()
+    cleanups.push(() => window.removeEventListener('scroll', onNavScroll))
+
+    /* ---------- dropdown hover-intent + keyboard ---------- */
+    const navItems = Array.from(root.querySelectorAll<HTMLElement>('.nav-links .nav-item'))
+    navItems.forEach((item) => {
+      // only items that actually have a dropdown panel (simple .nav-dd or wide .mega-dd)
+      if (!item.querySelector('.nav-dd, .mega-dd')) return
+      let hideTimer: ReturnType<typeof setTimeout> | null = null
+      const clearHide = () => {
+        if (hideTimer) {
+          clearTimeout(hideTimer)
+          hideTimer = null
+        }
+      }
+      const open = () => {
+        clearHide()
+        // mega panels are fixed + centered, so close any sibling before opening
+        navItems.forEach((i) => { if (i !== item) i.classList.remove('open') })
+        item.classList.add('open')
+      }
+      const scheduleClose = () => {
+        clearHide()
+        // grace period: stay open long enough to cross the trigger→panel gap
+        hideTimer = setTimeout(() => item.classList.remove('open'), 280)
+      }
+      const onEnter = () => open()
+      const onLeave = () => scheduleClose()
+      const onFocusIn = () => open()
+      const onFocusOut = (e: FocusEvent) => {
+        // close only when focus moves outside this nav-item
+        if (!item.contains(e.relatedTarget as Node)) scheduleClose()
+      }
+      const onLinkClick = () => {
+        clearHide()
+        item.classList.remove('open')
+      }
+      const ddLinks = Array.from(item.querySelectorAll('a'))
+      ddLinks.forEach((a) => a.addEventListener('click', onLinkClick))
+      item.addEventListener('mouseenter', onEnter)
+      item.addEventListener('mouseleave', onLeave)
+      item.addEventListener('focusin', onFocusIn)
+      item.addEventListener('focusout', onFocusOut)
+      cleanups.push(() => {
+        clearHide()
+        ddLinks.forEach((a) => a.removeEventListener('click', onLinkClick))
+        item.removeEventListener('mouseenter', onEnter)
+        item.removeEventListener('mouseleave', onLeave)
+        item.removeEventListener('focusin', onFocusIn)
+        item.removeEventListener('focusout', onFocusOut)
+      })
+    })
+    const closeAllDd = () => navItems.forEach((i) => i.classList.remove('open'))
+    const onDdKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeAllDd()
+    }
+    const onDocClickDd = (e: MouseEvent) => {
+      if (!root.contains(e.target as Node)) closeAllDd()
+    }
+    document.addEventListener('keydown', onDdKeyDown)
+    document.addEventListener('click', onDocClickDd)
+    cleanups.push(() => {
+      document.removeEventListener('keydown', onDdKeyDown)
+      document.removeEventListener('click', onDocClickDd)
+    })
+
+    /* ---------- mobile menu ---------- */
+    const burger = root.querySelector('#burger')
+    const mm = root.querySelector('#mobileMenu')
+    if (burger && mm) {
+      const toggle = () => mm.classList.toggle('open')
+      burger.addEventListener('click', toggle)
+      cleanups.push(() => burger.removeEventListener('click', toggle))
+      mm.querySelectorAll('a').forEach((a) => {
+        const h = () => mm.classList.remove('open')
+        a.addEventListener('click', h)
+        cleanups.push(() => a.removeEventListener('click', h))
+      })
+    }
+
+    /* ---------- analytics step flow animation ---------- */
+    const anSteps = Array.from(root.querySelectorAll<HTMLElement>('.an-step'))
+    if (anSteps.length && 'IntersectionObserver' in window) {
+      let stepI = 0
+      let stepTimer = 0
+      const anSection = root.querySelector('.analytics')
+      const runSteps = () => {
+        anSteps.forEach((s) => s.classList.remove('as-active'))
+        anSteps[stepI].classList.add('as-active')
+        stepI = (stepI + 1) % anSteps.length
+      }
+      const sio = new IntersectionObserver(
+        (es) => {
+          es.forEach((e) => {
+            if (e.isIntersecting && !stepTimer) {
+              runSteps()
+              stepTimer = window.setInterval(runSteps, 1400)
+            } else if (!e.isIntersecting && stepTimer) {
+              clearInterval(stepTimer)
+              stepTimer = 0
+              anSteps.forEach((s) => s.classList.remove('as-active'))
+            }
+          })
+        },
+        { threshold: 0.3 },
+      )
+      if (anSection) {
+        sio.observe(anSection)
+        cleanups.push(() => sio.disconnect())
+      }
+      cleanups.push(() => {
+        if (stepTimer) clearInterval(stepTimer)
+      })
+    }
 
     /* ---------- generic tab switcher ---------- */
     const wireTabs = (
@@ -370,56 +487,6 @@ export default function Home() {
       })
     }
 
-    /* ---------- dynamic island scroll-spy ---------- */
-    const island = root.querySelector<HTMLElement>('#island')
-    const islLabel = root.querySelector('#islLabel')
-    const islSub = root.querySelector('#islSub')
-    const islDots = root.querySelector<HTMLElement>('#islDots')
-    const ringProg = root.querySelector('#ringProg') as SVGElement | null
-    const ringPct = root.querySelector('#ringPct')
-    const spy = [
-      { id: 'hero', label: 'Outmate', sub: 'Top' },
-      { id: 'how', label: 'Process', sub: 'How Outmate Works' },
-      { id: 'signals', label: 'Signals', sub: 'Live Signals' },
-      { id: 'insights', label: 'Insights', sub: 'Analyzing Data' },
-      { id: 'cta', label: 'Compare', sub: 'Outmate vs Others' },
-      { id: 'footer', label: 'Connect', sub: 'Get in touch' },
-    ]
-    if (island && islDots) {
-      spy.forEach((s, idx) => {
-        const d = document.createElement('i')
-        if (idx === 0) d.className = 'on'
-        d.addEventListener('click', () => {
-          const el = document.getElementById(s.id)
-          if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 120, behavior: 'smooth' })
-        })
-        islDots.appendChild(d)
-      })
-      const dots = islDots.querySelectorAll('i')
-      const onSpyScroll = () => {
-        const sc = window.scrollY
-        const dh = document.body.scrollHeight - window.innerHeight
-        const pct = Math.max(0, Math.min(1, sc / (dh || 1)))
-        if (ringProg) ringProg.style.strokeDashoffset = String(88 - 88 * pct)
-        if (ringPct) ringPct.textContent = String(Math.round(pct * 100))
-        island.classList.toggle('hidden', sc < 400)
-        let active = 0
-        spy.forEach((s, idx) => {
-          const el = document.getElementById(s.id)
-          if (el && el.getBoundingClientRect().top < window.innerHeight * 0.5) active = idx
-        })
-        if (islLabel) islLabel.textContent = spy[active].label
-        if (islSub) islSub.textContent = spy[active].sub
-        dots.forEach((d, i) => d.classList.toggle('on', i === active))
-      }
-      window.addEventListener('scroll', onSpyScroll, { passive: true })
-      onSpyScroll()
-      cleanups.push(() => window.removeEventListener('scroll', onSpyScroll))
-      cleanups.push(() => {
-        islDots.innerHTML = ''
-      })
-    }
-
     return () => {
       cleanups.forEach((fn) => fn())
     }
@@ -427,7 +494,483 @@ export default function Home() {
 
   return (
     <div className="home-root" id="top" ref={rootRef}>
-      <SiteNav />
+      {/* ===================== HOME CHROME (promobar + mega navbar) ===================== */}
+      <div className="site-chrome">
+        {/* PROMO BAR */}
+        <div className="promobar">
+          <div className="pm-track" id="pmTrack">
+            <span className="pm-item">
+              <span className="badge">Free Trial</span> See exactly who&apos;s visiting your site — turn anonymous
+              traffic into qualified leads. Start free, no card required.{' '}
+              <Link to="/book-demo" className="pm-cta">
+                Start free trial →
+              </Link>{' '}
+              <span className="sep">/</span>
+            </span>
+            <span className="pm-item">
+              <span className="badge">Free Trial</span> See exactly who&apos;s visiting your site — turn anonymous
+              traffic into qualified leads. Start free, no card required.{' '}
+              <Link to="/book-demo" className="pm-cta">
+                Start free trial →
+              </Link>{' '}
+              <span className="sep">/</span>
+            </span>
+          </div>
+        </div>
+
+        {/* NAVBAR */}
+        <header className="navbar" id="navbar">
+          <a href="#top" className="nav-logo" onClick={scrollToId('top')}>
+            <img src="/images/logo.jpeg" alt="Outmate" />Outmate
+          </a>
+          <nav className="nav-links">
+            {/* PLATFORM mega */}
+            <div className="nav-item mega-item">
+              <button className="nav-trigger">
+                Platform <span className="chev">▼</span>
+              </button>
+              <div className="mega-dd">
+                <div className="mega-inner">
+                  <div className="mega-col">
+                    <span className="mega-group-label">Identify</span>
+                    <Link className="mega-link" to="/product/website-identification">
+                      <span className="ml-ico">◎</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">Website Identification</span>
+                        <span className="ml-d">Identify anonymous B2B visitors in real-time</span>
+                      </span>
+                    </Link>
+                    <Link className="mega-link" to="/product/b2b-database">
+                      <span className="ml-ico">▦</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">B2B Database</span>
+                        <span className="ml-d">200M verified contacts, enriched &amp; signal-ready</span>
+                      </span>
+                    </Link>
+                  </div>
+                  <div className="mega-col">
+                    <span className="mega-group-label">Engage</span>
+                    <Link className="mega-link" to="/product/co-pilot">
+                      <span className="ml-ico">✳</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">AI Co-Pilot</span>
+                        <span className="ml-d">Writes personalized outreach automatically</span>
+                      </span>
+                    </Link>
+                    <Link className="mega-link" to="/product/social-agent">
+                      <span className="ml-ico">@</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">Social Agent</span>
+                        <span className="ml-d">Turn social signals into pipeline</span>
+                      </span>
+                    </Link>
+                    <a className="mega-link placeholder-link">
+                      <span className="ml-ico">☏</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">Voice AI Agent</span>
+                        <span className="ml-d">Autonomous outbound calling, signal-triggered</span>
+                      </span>
+                    </a>
+                  </div>
+                  <div className="mega-col">
+                    <span className="mega-group-label">Automate</span>
+                    <Link className="mega-link" to="/product/workflow-automation">
+                      <span className="ml-ico">⚡</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">Workflow Automation</span>
+                        <span className="ml-d">Signal-triggered actions across your stack</span>
+                      </span>
+                    </Link>
+                    <a className="mega-link placeholder-link">
+                      <span className="ml-ico">⇄</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">CRM Sync</span>
+                        <span className="ml-d">Auto-push leads to HubSpot, Salesforce, Pipedrive</span>
+                      </span>
+                    </a>
+                  </div>
+                  <div className="mega-col mega-col-dark">
+                    <span className="mega-group-label" style={{ color: 'rgba(255,255,255,.45)' }}>
+                      Platform
+                    </span>
+                    <a className="mega-link mega-link-dark placeholder-link">
+                      <span className="ml-txt">
+                        <span className="ml-t">Integrations</span>
+                        <span className="ml-d">Connect 50+ tools in your stack</span>
+                      </span>
+                    </a>
+                    <a className="mega-link mega-link-dark placeholder-link">
+                      <span className="ml-txt">
+                        <span className="ml-t">API Docs</span>
+                        <span className="ml-d">Build on top of Outmate</span>
+                      </span>
+                    </a>
+                    <a className="mega-link mega-link-dark placeholder-link">
+                      <span className="ml-txt">
+                        <span className="ml-t">Security &amp; Privacy</span>
+                        <span className="ml-d">SOC 2 Type II · GDPR · CCPA</span>
+                      </span>
+                    </a>
+                    <div className="mega-cta-strip">
+                      <Link to="/book-demo" className="btn solid" style={{ height: '34px', fontSize: '11px', padding: '0 14px' }}>
+                        Try free →
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* USE CASES mega */}
+            <div className="nav-item mega-item">
+              <button className="nav-trigger">
+                Use Cases <span className="chev">▼</span>
+              </button>
+              <div className="mega-dd">
+                <div className="mega-inner">
+                  <div className="mega-col">
+                    <span className="mega-group-label">By Goal</span>
+                    <Link className="mega-link" to="/use-cases/identify-visitors">
+                      <span className="ml-ico">◎</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">Identify High-Intent Visitors</span>
+                        <span className="ml-d">Know who&apos;s on your site before they call</span>
+                      </span>
+                    </Link>
+                    <Link className="mega-link" to="/use-cases/enrich-route-leads">
+                      <span className="ml-ico">▦</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">Enrich &amp; Route Leads</span>
+                        <span className="ml-d">Instant context for every inbound prospect</span>
+                      </span>
+                    </Link>
+                    <Link className="mega-link" to="/use-cases/automate-workflows">
+                      <span className="ml-ico">⚡</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">Automate GTM Workflows</span>
+                        <span className="ml-d">Signal-triggered actions across your stack</span>
+                      </span>
+                    </Link>
+                  </div>
+                  <div className="mega-col">
+                    <span className="mega-group-label">By Team</span>
+                    <Link className="mega-link" to="/use-cases/sales-team">
+                      <span className="ml-ico">◷</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">Sales Teams</span>
+                        <span className="ml-d">Arm reps with real-time intent data</span>
+                      </span>
+                    </Link>
+                    <a className="mega-link placeholder-link">
+                      <span className="ml-ico">◭</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">Marketing Teams</span>
+                        <span className="ml-d">Convert anonymous traffic into named leads</span>
+                      </span>
+                    </a>
+                    <a className="mega-link placeholder-link">
+                      <span className="ml-ico">◍</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">RevOps</span>
+                        <span className="ml-d">Clean CRM, seamless routing, full attribution</span>
+                      </span>
+                    </a>
+                  </div>
+                  <div className="mega-col">
+                    <span className="mega-group-label">By Role</span>
+                    <a className="mega-link placeholder-link">
+                      <span className="ml-ico">◆</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">Founder-Led GTM</span>
+                        <span className="ml-d">Automate pipeline while you build the product</span>
+                      </span>
+                    </a>
+                    <a className="mega-link placeholder-link">
+                      <span className="ml-ico">⬣</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">Agencies</span>
+                        <span className="ml-d">Scale client results from one workspace</span>
+                      </span>
+                    </a>
+                    <Link className="mega-link" to="/use-cases/ai-outbound">
+                      <span className="ml-ico">◈</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">Run AI-Powered Outbound</span>
+                        <span className="ml-d">Autonomous calling and email at scale</span>
+                      </span>
+                    </Link>
+                  </div>
+                  <div className="mega-col mega-col-dark">
+                    <span className="mega-group-label" style={{ color: 'rgba(255,255,255,.45)' }}>
+                      Results
+                    </span>
+                    <div className="mega-stat">
+                      <span className="ms-n">+312%</span>
+                      <span className="ms-l">Pipeline generated</span>
+                    </div>
+                    <div className="mega-stat">
+                      <span className="ms-n">97%</span>
+                      <span className="ms-l">Visitor match accuracy</span>
+                    </div>
+                    <div className="mega-stat">
+                      <span className="ms-n">&lt;2s</span>
+                      <span className="ms-l">Resolution time</span>
+                    </div>
+                    <div className="mega-cta-strip" style={{ marginTop: 'auto' }}>
+                      <Link to="/use-cases/identify-visitors" className="btn solid" style={{ height: '34px', fontSize: '11px', padding: '0 14px' }}>
+                        See all use cases →
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* RESOURCES mega */}
+            <div className="nav-item mega-item">
+              <button className="nav-trigger">
+                Resources <span className="chev">▼</span>
+              </button>
+              <div className="mega-dd">
+                <div className="mega-inner">
+                  <div className="mega-col">
+                    <span className="mega-group-label">Learn</span>
+                    <a className="mega-link placeholder-link">
+                      <span className="ml-ico">⌘</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">Documentation</span>
+                        <span className="ml-d">Everything you need to get started</span>
+                      </span>
+                    </a>
+                    <a className="mega-link placeholder-link">
+                      <span className="ml-ico">◌</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">API Docs</span>
+                        <span className="ml-d">Build on top of Outmate</span>
+                      </span>
+                    </a>
+                    <a className="mega-link placeholder-link">
+                      <span className="ml-ico">◷</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">Blog</span>
+                        <span className="ml-d">GTM playbooks &amp; product updates</span>
+                      </span>
+                    </a>
+                  </div>
+                  <div className="mega-col">
+                    <span className="mega-group-label">Connect</span>
+                    <a className="mega-link placeholder-link">
+                      <span className="ml-ico">◇</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">Integrations</span>
+                        <span className="ml-d">Connect 50+ tools in your stack</span>
+                      </span>
+                    </a>
+                    <Link className="mega-link" to="/compare">
+                      <span className="ml-ico">◑</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">Compare</span>
+                        <span className="ml-d">See how Outmate stacks up</span>
+                      </span>
+                    </Link>
+                    <Link className="mega-link" to="/labs/free-tools">
+                      <span className="ml-ico">✦</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">Labs &amp; Free Tools</span>
+                        <span className="ml-d">Experiments &amp; free GTM utilities</span>
+                      </span>
+                    </Link>
+                  </div>
+                  <div className="mega-col">
+                    <span className="mega-group-label">Support</span>
+                    <a className="mega-link placeholder-link">
+                      <span className="ml-ico">◔</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">Help Center</span>
+                        <span className="ml-d">Guides, FAQs &amp; support</span>
+                      </span>
+                    </a>
+                    <a className="mega-link placeholder-link">
+                      <span className="ml-ico">♥</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">Customer Stories</span>
+                        <span className="ml-d">How teams win with Outmate</span>
+                      </span>
+                    </a>
+                    <a className="mega-link placeholder-link">
+                      <span className="ml-ico">▦</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">Security &amp; Privacy</span>
+                        <span className="ml-d">SOC 2 Type II · GDPR · CCPA</span>
+                      </span>
+                    </a>
+                  </div>
+                  <div className="mega-col mega-col-dark">
+                    <span className="mega-group-label" style={{ color: 'rgba(255,255,255,.45)' }}>
+                      Get Started
+                    </span>
+                    <Link className="mega-link mega-link-dark" to="/book-demo">
+                      <span className="ml-txt">
+                        <span className="ml-t">Book a Demo</span>
+                        <span className="ml-d">See Outmate live in 20 minutes</span>
+                      </span>
+                    </Link>
+                    <Link className="mega-link mega-link-dark" to="/book-demo">
+                      <span className="ml-txt">
+                        <span className="ml-t">Start Free Trial</span>
+                        <span className="ml-d">14 days, no credit card</span>
+                      </span>
+                    </Link>
+                    <div className="mega-cta-strip">
+                      <Link to="/book-demo" className="btn solid" style={{ height: '34px', fontSize: '11px', padding: '0 14px' }}>
+                        Try free →
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* COMPANY mega */}
+            <div className="nav-item mega-item">
+              <button className="nav-trigger">
+                Company <span className="chev">▼</span>
+              </button>
+              <div className="mega-dd">
+                <div className="mega-inner">
+                  <div className="mega-col">
+                    <span className="mega-group-label">About</span>
+                    <a className="mega-link placeholder-link">
+                      <span className="ml-ico">⬡</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">About Outmate</span>
+                        <span className="ml-d">Our mission &amp; the team behind it</span>
+                      </span>
+                    </a>
+                    <a className="mega-link placeholder-link">
+                      <span className="ml-ico">◭</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">Careers</span>
+                        <span className="ml-d">Join us building the GTM OS</span>
+                      </span>
+                    </a>
+                  </div>
+                  <div className="mega-col">
+                    <span className="mega-group-label">Connect</span>
+                    <Link className="mega-link" to="/book-demo">
+                      <span className="ml-ico">✉</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">Contact Sales</span>
+                        <span className="ml-d">Talk to our team</span>
+                      </span>
+                    </Link>
+                    <a
+                      className="mega-link"
+                      href="https://www.linkedin.com/company/outmateai/posts/?feedView=all"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <span className="ml-ico">in</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">LinkedIn</span>
+                        <span className="ml-d">Follow our journey</span>
+                      </span>
+                    </a>
+                  </div>
+                  <div className="mega-col">
+                    <span className="mega-group-label">Pricing</span>
+                    <Link className="mega-link" to="/pricing">
+                      <span className="ml-ico">◐</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">Plans &amp; Pricing</span>
+                        <span className="ml-d">Simple, transparent pricing</span>
+                      </span>
+                    </Link>
+                    <Link className="mega-link" to="/pricing">
+                      <span className="ml-ico">◷</span>
+                      <span className="ml-txt">
+                        <span className="ml-t">For Startups</span>
+                        <span className="ml-d">Special pricing for early teams</span>
+                      </span>
+                    </Link>
+                  </div>
+                  <div className="mega-col mega-col-dark">
+                    <span className="mega-group-label" style={{ color: 'rgba(255,255,255,.45)' }}>
+                      Trusted By
+                    </span>
+                    <div className="mega-stat">
+                      <span className="ms-n">100+</span>
+                      <span className="ms-l">Revenue teams</span>
+                    </div>
+                    <div className="mega-stat">
+                      <span className="ms-n">4.8★</span>
+                      <span className="ms-l">G2 &amp; Capterra</span>
+                    </div>
+                    <div className="mega-stat">
+                      <span className="ms-n">SOC 2</span>
+                      <span className="ms-l">Type II certified</span>
+                    </div>
+                    <div className="mega-cta-strip" style={{ marginTop: 'auto' }}>
+                      <Link to="/book-demo" className="btn solid" style={{ height: '34px', fontSize: '11px', padding: '0 14px' }}>
+                        Book a demo →
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </nav>
+          <div className="nav-cta">
+            <Link to="/pricing" className="pill">
+              GET LEADS FREE
+            </Link>
+            <Link to="/book-demo" className="btn demo" style={{ height: '38px' }}>
+              BOOK A DEMO →
+            </Link>
+            <button className="nav-burger" id="burger" aria-label="Menu">
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+          </div>
+        </header>
+
+        {/* MOBILE MENU */}
+        <div className="mobile-menu" id="mobileMenu">
+          <div className="mm-group">
+            <h4>Platform</h4>
+            <Link to="/product/website-identification">Website Identification</Link>
+            <Link to="/product/b2b-database">B2B Database</Link>
+            <Link to="/product/co-pilot">AI Co-Pilot</Link>
+            <Link to="/product/social-agent">Social Agent</Link>
+            <Link to="/product/workflow-automation">Workflow Automation</Link>
+          </div>
+          <div className="mm-group">
+            <h4>Use Cases</h4>
+            <Link to="/use-cases/identify-visitors">Identify High-Intent Visitors</Link>
+            <Link to="/use-cases/enrich-route-leads">Enrich &amp; Route Leads</Link>
+            <Link to="/use-cases/automate-workflows">Automate GTM Workflows</Link>
+            <Link to="/use-cases/sales-team">Sales Teams</Link>
+            <Link to="/use-cases/ai-outbound">Run AI-Powered Outbound</Link>
+          </div>
+          <div className="mm-group">
+            <h4>Resources</h4>
+            <Link to="/compare">Compare</Link>
+            <Link to="/labs/free-tools">Labs &amp; Free Tools</Link>
+            <Link to="/labs">Labs</Link>
+          </div>
+          <div className="mm-group">
+            <h4>Company</h4>
+            <Link to="/pricing">Pricing</Link>
+            <Link to="/book-demo">Contact</Link>
+          </div>
+          <div className="mm-group">
+            <Link to="/book-demo" className="btn solid" style={{ display: 'inline-flex' }}>
+              BOOK A DEMO →
+            </Link>
+          </div>
+        </div>
+      </div>
 
       <main>
         {/* ===================== 1 · HERO + SANDBOX (joined) ===================== */}
@@ -1500,37 +2043,205 @@ export default function Home() {
           <div className="h-head reveal">
             <span className="h-eyebrow">Integrations</span>
             <h2 className="h-title">
-              <span style={{ whiteSpace: 'nowrap', display: 'block' }}>Push Your Leads Into</span>
-              <span style={{ whiteSpace: 'nowrap', display: 'block' }}>Your Favorite Tools.</span>
+              Push your leads
+              <br />
+              into your favourite tools.
             </h2>
             <p className="h-sub">
-              Streamline your lead generation process by pushing your leads into your CRM, Slack, Email &amp; LinkedIn
-              automation tools and more.
+              Connect Outmate to your CRM, communication tools, cloud docs, and project management stack — one platform,
+              all your tools.
             </p>
           </div>
-          <LogoMarquee />
+          <div className="istrip">
+            <div className="itrack l">
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=docs.google.com&sz=32" alt="Google Docs" />
+                Google Docs
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=drive.google.com&sz=32" alt="Google Drive" />
+                Google Drive
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=onedrive.live.com&sz=32" alt="OneDrive" />
+                Microsoft OneDrive
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=sharepoint.com&sz=32" alt="SharePoint" />
+                SharePoint
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=atlassian.com&sz=32" alt="Confluence" />
+                Confluence
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=github.com&sz=32" alt="GitHub" />
+                GitHub
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=asana.com&sz=32" alt="Asana" />
+                Asana
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=airtable.com&sz=32" alt="Airtable" />
+                Airtable
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=gmail.com&sz=32" alt="Gmail" />
+                Gmail / Outlook
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=docs.google.com&sz=32" alt="Google Docs" />
+                Google Docs
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=drive.google.com&sz=32" alt="Google Drive" />
+                Google Drive
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=onedrive.live.com&sz=32" alt="OneDrive" />
+                Microsoft OneDrive
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=sharepoint.com&sz=32" alt="SharePoint" />
+                SharePoint
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=atlassian.com&sz=32" alt="Confluence" />
+                Confluence
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=github.com&sz=32" alt="GitHub" />
+                GitHub
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=asana.com&sz=32" alt="Asana" />
+                Asana
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=airtable.com&sz=32" alt="Airtable" />
+                Airtable
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=gmail.com&sz=32" alt="Gmail" />
+                Gmail / Outlook
+              </span>
+            </div>
+          </div>
+          <div className="istrip">
+            <div className="itrack r">
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=slack.com&sz=32" alt="Slack" />
+                Slack
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=microsoft.com&sz=32" alt="Teams" />
+                Microsoft Teams
+              </span>
+              <span className="ilogo">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="#5046E6" strokeWidth="2" />
+                  <path d="M8 12h8M12 8l4 4-4 4" stroke="#5046E6" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+                Webhooks
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=hubspot.com&sz=32" alt="HubSpot" />
+                HubSpot
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=salesforce.com&sz=32" alt="Salesforce" />
+                Salesforce
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=outlook.com&sz=32" alt="Outlook" />
+                Outlook
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=whatsapp.com&sz=32" alt="WhatsApp" />
+                WhatsApp / SMS
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=slack.com&sz=32" alt="Slack" />
+                Slack
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=microsoft.com&sz=32" alt="Teams" />
+                Microsoft Teams
+              </span>
+              <span className="ilogo">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="#5046E6" strokeWidth="2" />
+                  <path d="M8 12h8M12 8l4 4-4 4" stroke="#5046E6" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+                Webhooks
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=hubspot.com&sz=32" alt="HubSpot" />
+                HubSpot
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=salesforce.com&sz=32" alt="Salesforce" />
+                Salesforce
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=outlook.com&sz=32" alt="Outlook" />
+                Outlook
+              </span>
+              <span className="ilogo">
+                <img src="https://www.google.com/s2/favicons?domain=whatsapp.com&sz=32" alt="WhatsApp" />
+                WhatsApp / SMS
+              </span>
+            </div>
+          </div>
         </section>
 
         {/* ===================== 6 · FEATURE SHOWCASE (bento) ===================== */}
         <section className="fshow h-sec" data-screen-label="Feature Showcase">
-          <div className="h-head reveal">
-            <span className="h-eyebrow">Platform Overview</span>
-            <h2 className="h-title">
-              IDENTIFY VISITORS IN
-              <br />
-              MINUTES, NOT MONTHS.
-            </h2>
-            <p className="h-sub">
-              Outmate helps GTM teams identify anonymous visitors, enrich accounts instantly, and activate outbound
-              workflows without manual research.
-            </p>
-            <div className="id-cta">
-              <Link to="/book-demo" className="btn solid">
-                See platform →
-              </Link>
-              <Link to="/book-demo" className="btn">
-                Documentation
-              </Link>
+          <div className="fshow-header reveal">
+            <div className="fshow-left">
+              <span className="h-eyebrow">Platform Overview</span>
+              <h2 className="h-title fshow-title">
+                IDENTIFY
+                <br />
+                VISITORS IN
+                <br />
+                MINUTES,
+                <br />
+                NOT MONTHS.
+              </h2>
+              <div className="id-cta" style={{ marginTop: '16px' }}>
+                <Link to="/book-demo" className="btn solid">
+                  See platform →
+                </Link>
+                <Link to="/book-demo" className="btn">
+                  Docs
+                </Link>
+              </div>
+            </div>
+            <div className="fshow-right">
+              <p className="fshow-sub">
+                Outmate helps GTM teams identify anonymous visitors, enrich accounts instantly, and activate outbound
+                workflows without manual research.
+              </p>
+              <div className="fshow-stats">
+                <div className="fst">
+                  <span className="fst-n">97%</span>
+                  <span className="fst-l">Match accuracy</span>
+                </div>
+                <div className="fst">
+                  <span className="fst-n">&lt;2s</span>
+                  <span className="fst-l">Resolution time</span>
+                </div>
+                <div className="fst">
+                  <span className="fst-n">200M+</span>
+                  <span className="fst-l">Contact graph</span>
+                </div>
+                <div className="fst">
+                  <span className="fst-n">118ms</span>
+                  <span className="fst-l">Avg response</span>
+                </div>
+              </div>
             </div>
           </div>
           <div className="fbento reveal">
@@ -1700,9 +2411,9 @@ export default function Home() {
           >
             <span className="h-eyebrow">Platform</span>
             <h2 className="h-title">
-              Everything you need to
+              Everything you need
               <br />
-              turn traffic into pipeline
+              to turn traffic into pipeline
             </h2>
             <p className="h-sub">
               Six products and the use cases they power — one platform that identifies your visitors, enriches them, and
@@ -1710,11 +2421,11 @@ export default function Home() {
             </p>
           </div>
 
-          {/* toggle */}
-          <div className="caps-toggle">
+          {/* products only, toggle hidden */}
+          <div className="caps-toggle" style={{ display: 'none' }}>
             <button className="caps-tb" aria-selected="true" data-caps="products">
               <span className="ct">Products</span>
-              <span className="cn">06</span>
+              <span className="cn">05</span>
             </button>
             <button className="caps-tb" aria-selected="false" data-caps="usecases">
               <span className="ct">Use Cases</span>
@@ -1732,6 +2443,13 @@ export default function Home() {
                 </div>
                 <h4>Website Identification</h4>
                 <p>Identify anonymous B2B visitors in real-time</p>
+                <div className="ec-preview">
+                  <span>→ Real-time visitor ID</span>
+                  <span>→ Company &amp; person match</span>
+                  <span>→ 97% accuracy</span>
+                  <span>→ Works without forms</span>
+                  <span>→ &lt;2s resolution</span>
+                </div>
                 <span className="ea">Learn more →</span>
               </Link>
               <Link className="ec" to="/product/b2b-database">
@@ -1741,6 +2459,13 @@ export default function Home() {
                 </div>
                 <h4>B2B Database</h4>
                 <p>200M verified contacts, enriched &amp; signal-ready</p>
+                <div className="ec-preview">
+                  <span>→ 200M+ verified contacts</span>
+                  <span>→ Direct dials &amp; emails</span>
+                  <span>→ Firmographic data</span>
+                  <span>→ Tech stack signals</span>
+                  <span>→ Real-time enrichment</span>
+                </div>
                 <span className="ea">Learn more →</span>
               </Link>
               <Link className="ec" to="/product/co-pilot">
@@ -1750,24 +2475,45 @@ export default function Home() {
                 </div>
                 <h4>Co-Pilot</h4>
                 <p>AI GTM co-pilot that writes outreach automatically</p>
+                <div className="ec-preview">
+                  <span>→ AI-personalized openers</span>
+                  <span>→ Natural language queries</span>
+                  <span>→ Multi-channel sequences</span>
+                  <span>→ Intent-based targeting</span>
+                  <span>→ Auto follow-ups</span>
+                </div>
                 <span className="ea">Learn more →</span>
               </Link>
               <Link className="ec" to="/product/social-agent">
                 <div className="ei">
-                  <span className="en">05</span>
+                  <span className="en">04</span>
                   <span className="eico">@</span>
                 </div>
                 <h4>Social Agent</h4>
                 <p>Turn social signals into pipeline automatically</p>
+                <div className="ec-preview">
+                  <span>→ LinkedIn signal tracking</span>
+                  <span>→ Profile visit detection</span>
+                  <span>→ Auto connection requests</span>
+                  <span>→ Social intent scoring</span>
+                  <span>→ Pipeline from social</span>
+                </div>
                 <span className="ea">Learn more →</span>
               </Link>
               <Link className="ec" to="/product/workflow-automation">
                 <div className="ei">
-                  <span className="en">06</span>
+                  <span className="en">05</span>
                   <span className="eico">⚡</span>
                 </div>
                 <h4>Workflow Automation</h4>
                 <p>Route high-intent visitors into alerts, sequences, and next best actions</p>
+                <div className="ec-preview">
+                  <span>→ Node-based builder</span>
+                  <span>→ Signal-triggered flows</span>
+                  <span>→ CRM auto-sync</span>
+                  <span>→ Slack &amp; email routing</span>
+                  <span>→ Zero manual work</span>
+                </div>
                 <span className="ea">Learn more →</span>
               </Link>
             </div>
@@ -1827,31 +2573,73 @@ export default function Home() {
 
         {/* ===================== 9 · CUSTOMER PROOF ===================== */}
         <section className="proof h-sec" data-screen-label="Customer Proof">
-          <div className="proof-main reveal">
-            <span className="pkick">Customer Stories</span>
-            <h2>
-              How Outmate Helps
-              <br />
-              Revenue Teams Win
-            </h2>
-            <p className="quote">
-              &quot;Outmate quickly felt like part of our sales team. It helped us reach the right people faster, so our
-              reps stopped guessing who to call and spent their time in real conversations that actually moved deals
-              forward.&quot;
-            </p>
-            <div className="who">
-              <span className="av">MW</span>
-              <span>
-                <span className="nm">Mark White</span>
-                <div className="rl">Founder at RevScale</div>
-              </span>
-              <span className="brand-tag">REVOPS AI</span>
+          <div style={{ padding: 'clamp(24px,3vw,48px) clamp(20px,4vw,48px) 0' }}>
+            <div className="h-head reveal" style={{ textAlign: 'left', alignItems: 'flex-start', margin: 0 }}>
+              <span className="h-eyebrow">Customer Stories</span>
+              <h2 className="h-title">
+                How Outmate Helps
+                <br />
+                Revenue Teams Win
+              </h2>
             </div>
           </div>
-          <div className="proof-metric reveal">
-            <span className="stripe"></span>
-            <div className="n">+312%</div>
-            <div className="l">Increase in qualified pipeline</div>
+          <div className="proof-grid reveal">
+            <div className="proof-card pc-dark">
+              <p className="pc-quote">
+                &quot;Outmate quickly felt like part of our sales team. It helped us reach the right people faster, so our
+                reps spent their time in real conversations that actually moved deals forward.&quot;
+              </p>
+              <div className="pc-who">
+                <span className="pc-av">MW</span>
+                <span>
+                  <span className="pc-nm">Mark White</span>
+                  <div className="pc-rl">Founder · RevScale</div>
+                </span>
+                <span className="pc-stat">+312% pipeline</span>
+              </div>
+            </div>
+            <div className="proof-card">
+              <p className="pc-quote">
+                &quot;Within two weeks of deploying Outmate, we identified 800+ high-intent accounts we had no idea were
+                visiting. Pipeline doubled in 30 days.&quot;
+              </p>
+              <div className="pc-who">
+                <span className="pc-av">JR</span>
+                <span>
+                  <span className="pc-nm">Jordan Rivera</span>
+                  <div className="pc-rl">VP Sales · Momentum.io</div>
+                </span>
+                <span className="pc-stat">2× pipeline in 30d</span>
+              </div>
+            </div>
+            <div className="proof-card">
+              <p className="pc-quote">
+                &quot;We replaced three tools with Outmate. Visitor ID, enrichment, and outbound sequences — all from one
+                place. Our SDRs close 40% more meetings now.&quot;
+              </p>
+              <div className="pc-who">
+                <span className="pc-av">AL</span>
+                <span>
+                  <span className="pc-nm">Aisha Lee</span>
+                  <div className="pc-rl">Head of Growth · Archway Labs</div>
+                </span>
+                <span className="pc-stat">+40% meetings</span>
+              </div>
+            </div>
+            <div className="proof-card pc-accent">
+              <p className="pc-quote">
+                &quot;The signal intelligence alone is worth it. We knew a $200k account was evaluating us before they
+                ever filled a form — and we closed them in 11 days.&quot;
+              </p>
+              <div className="pc-who">
+                <span className="pc-av">DP</span>
+                <span>
+                  <span className="pc-nm">Daniel Park</span>
+                  <div className="pc-rl">CRO · Launchpad AI</div>
+                </span>
+                <span className="pc-stat">$200k deal in 11d</span>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -2033,70 +2821,66 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ===================== 11 · TRUST POSITIONING (sticky) ===================== */}
-        <section className="trustpos h-sec" id="signals" data-screen-label="Trust Positioning">
-          <div className="tp-grid">
-            <div className="tp-left">
-              <div className="tp-sticky">
-                <span className="h-eyebrow">Signal Intelligence</span>
-                <h2>
-                  See what your GTM
-                  <br />
-                  team was missing.
-                </h2>
+        {/* ===================== 11 · SIGNAL INTELLIGENCE (static grid) ===================== */}
+        <section className="trustpos h-sec" id="signals" data-screen-label="Signal Intelligence">
+          <div className="tp-header reveal">
+            <span className="h-eyebrow">Signal Intelligence</span>
+            <h2 className="h-title">
+              See what your GTM
+              <br />
+              team was missing.
+            </h2>
+          </div>
+          <div className="tp-stat-grid reveal">
+            <div className="tp-stat">
+              <div className="tps-n">
+                <span className="count" data-count="97">
+                  0
+                </span>
+                %
               </div>
+              <div className="tps-t">Anonymous Visitors Identified</div>
+              <div className="tps-d">Reveal who&apos;s actually researching your product.</div>
             </div>
-            <div className="tp-right">
-              <div className="tp-metric reveal">
-                <div className="n">
-                  <span className="count" data-count="97">
-                    0
-                  </span>
-                  %
-                </div>
-                <div className="t">Anonymous Visitors Identified</div>
-                <div className="d">Reveal who&apos;s actually researching your product.</div>
+            <div className="tp-stat">
+              <div className="tps-n">
+                <span className="count" data-count="4" data-dec="0">
+                  0
+                </span>
+                x
               </div>
-              <div className="tp-metric reveal">
-                <div className="n">
-                  <span className="count" data-count="4.3" data-dec="1">
-                    0
-                  </span>
-                  x
-                </div>
-                <div className="t">Faster GTM Response</div>
-                <div className="d">Speed matters more than volume.</div>
+              <div className="tps-t">Faster GTM Response</div>
+              <div className="tps-d">Speed matters more than volume.</div>
+            </div>
+            <div className="tp-stat">
+              <div className="tps-n">
+                <span className="count" data-count="200">
+                  0
+                </span>
+                M+
               </div>
-              <div className="tp-metric reveal">
-                <div className="n">
-                  <span className="count" data-count="200">
-                    0
-                  </span>
-                  M+
-                </div>
-                <div className="t">Verified Contacts</div>
-                <div className="d">Every visitor, matched to a 200M+ contact graph.</div>
+              <div className="tps-t">Verified Contacts</div>
+              <div className="tps-d">Every visitor, matched to a 200M+ contact graph.</div>
+            </div>
+            <div className="tp-stat">
+              <div className="tps-n">
+                <span className="count" data-count="18">
+                  0
+                </span>
+                %
               </div>
-              <div className="tp-metric reveal">
-                <div className="n">
-                  <span className="count" data-count="18">
-                    0
-                  </span>
-                  %
-                </div>
-                <div className="t">Pipeline Lift Generated</div>
-                <div className="d">Pipeline should be measurable.</div>
+              <div className="tps-t">Pipeline Lift Generated</div>
+              <div className="tps-d">Pipeline should be measurable.</div>
+            </div>
+            <div className="tp-stat">
+              <div className="tps-n">
+                <span className="count" data-count="12">
+                  0
+                </span>
+                s
               </div>
-              <div className="tp-metric reveal">
-                <div className="n">
-                  <span className="count" data-count="12">
-                    0
-                  </span>
-                  s
-                </div>
-                <div className="t">Signal Detection Speed</div>
-                <div className="d">Intelligence at the speed of thought.</div>
-              </div>
+              <div className="tps-t">Signal Detection Speed</div>
+              <div className="tps-d">Intelligence at the speed of thought.</div>
             </div>
           </div>
         </section>
@@ -2113,66 +2897,77 @@ export default function Home() {
               single GTM operating system.
             </p>
           </div>
-          <div className="an-window reveal">
-            <div className="an-wbar">
-              <div className="dots">
-                <i style={{ background: '#ff5f57' }}></i>
-                <i style={{ background: '#febc2e' }}></i>
-                <i style={{ background: '#28c840' }}></i>
+          {/* 2-col split — metric wall left, step flow right */}
+          <div className="an-split reveal">
+            <div className="an-metrics">
+              <div className="an-m">
+                <span className="an-mv">$4.8M</span>
+                <span className="an-ml">Revenue generated</span>
+                <span className="an-mc">↑ 18.2%</span>
               </div>
-              <span>outmate.os v4.2 — live</span>
-              <span className="live">
-                <span className="d"></span>LIVE
-              </span>
+              <div className="an-m">
+                <span className="an-mv">$12.4M</span>
+                <span className="an-ml">Pipeline influenced</span>
+                <span className="an-mc">↑ 24.5%</span>
+              </div>
+              <div className="an-m">
+                <span className="an-mv">186</span>
+                <span className="an-ml">Meetings booked</span>
+                <span className="an-mc">+31 this month</span>
+              </div>
+              <div className="an-m">
+                <span className="an-mv">11.6x</span>
+                <span className="an-ml">Return on investment</span>
+                <span className="an-mc">↑ 2.1x YoY</span>
+              </div>
+              <div className="an-badge">
+                <span className="d"></span>Enterprise Certified · SOC 2 Type II
+              </div>
+              <Link to="/book-demo" className="btn solid" style={{ alignSelf: 'flex-start', marginTop: '6px' }}>
+                Explore Platform →
+              </Link>
             </div>
-            <div className="an-wbody">
-              <div className="an-cell">
-                <div className="v">$4.8M</div>
-                <div className="l">Revenue</div>
-                <div className="c">+18.2%</div>
+            <div className="an-flow">
+              <div className="an-step">
+                <span className="as-n">01</span>
+                <div className="as-body">
+                  <span className="as-t">Visitor lands on your site</span>
+                  <span className="as-d">Pixel fires — anonymous session captured in real time.</span>
+                </div>
               </div>
-              <div className="an-cell">
-                <div className="v">$12.4M</div>
-                <div className="l">Pipeline</div>
-                <div className="c">+24.5%</div>
+              <div className="an-connector"></div>
+              <div className="an-step">
+                <span className="as-n">02</span>
+                <div className="as-body">
+                  <span className="as-t">Identity resolved in &lt;2s</span>
+                  <span className="as-d">Company, decision-maker, intent signals — all appended.</span>
+                </div>
               </div>
-              <div className="an-cell">
-                <div className="v">186</div>
-                <div className="l">Meetings</div>
-                <div className="c">+31</div>
+              <div className="an-connector"></div>
+              <div className="an-step">
+                <span className="as-n">03</span>
+                <div className="as-body">
+                  <span className="as-t">ICP score calculated</span>
+                  <span className="as-d">Firmographics + behavior scored against your ideal profile.</span>
+                </div>
               </div>
-              <div className="an-cell">
-                <div className="v">11.6x</div>
-                <div className="l">ROI</div>
-                <div className="c">+2.1x</div>
+              <div className="an-connector"></div>
+              <div className="an-step">
+                <span className="as-n">04</span>
+                <div className="as-body">
+                  <span className="as-t">Workflow triggers automatically</span>
+                  <span className="as-d">Alert Slack, push to CRM, launch sequence — zero manual work.</span>
+                </div>
+              </div>
+              <div className="an-connector"></div>
+              <div className="an-step as-accent">
+                <span className="as-n">05</span>
+                <div className="as-body">
+                  <span className="as-t">Revenue attributed</span>
+                  <span className="as-d">Every meeting, deal and dollar traced back to the original signal.</span>
+                </div>
               </div>
             </div>
-            <div className="an-funnel">
-              <div className="fb" style={{ height: '100%' }}>
-                100%
-              </div>
-              <div className="fb" style={{ height: '74%' }}>
-                74%
-              </div>
-              <div className="fb" style={{ height: '59%' }}>
-                59%
-              </div>
-              <div className="fb" style={{ height: '33%' }}>
-                33%
-              </div>
-              <div className="fb" style={{ height: '18%' }}>
-                18%
-              </div>
-            </div>
-          </div>
-          <div className="an-float reveal">
-            <span className="d"></span>Enterprise Certified · SOC 2 Type II
-          </div>
-          <div style={{ height: 'clamp(20px,2vw,30px)' }}></div>
-          <div style={{ padding: '0 clamp(20px,4vw,48px) clamp(30px,4vw,56px)' }}>
-            <Link to="/book-demo" className="btn white">
-              Explore Platform →
-            </Link>
           </div>
         </section>
 
@@ -2243,13 +3038,13 @@ export default function Home() {
             <h5>Resources</h5>
             <ul>
               <li>
-                <a href="#">Documentation</a>
+                <a className="placeholder-link">Documentation</a>
               </li>
               <li>
-                <a href="#">API Docs</a>
+                <a className="placeholder-link">API Docs</a>
               </li>
               <li>
-                <a href="#">Integrations</a>
+                <a className="placeholder-link">Integrations</a>
               </li>
               <li>
                 <Link to="/compare">Compare</Link>
@@ -2263,36 +3058,69 @@ export default function Home() {
             <h5>Company</h5>
             <ul>
               <li>
-                <a href="#">About</a>
+                <a className="placeholder-link">About</a>
               </li>
               <li>
-                <a href="#">Careers</a>
+                <a className="placeholder-link">Careers</a>
               </li>
               <li>
                 <Link to="/pricing">Pricing</Link>
               </li>
               <li>
-                <a href="#">Contact</a>
+                <a className="placeholder-link">Contact</a>
               </li>
             </ul>
           </div>
           <div className="ai-card">
             <div className="ai-top">
               <span className="ai-dot">✳</span>
-              <span className="ai-t">Ask AI</span>
+              <span className="ai-t">Ask about Outmate</span>
             </div>
-            <p>
-              Ask AI about Outmate. Get answers about GTM workflows, visitor identification, and outbound automation.
-            </p>
-            <a href="#" className="btn solid" style={{ height: '40px' }}>
-              Open AI Assistant
-            </a>
+            <p>Click any AI to ask directly about Outmate, GTM workflows, or visitor identification.</p>
+            <div className="ai-tools">
+              <a
+                href="https://chat.openai.com/?q=Tell+me+about+Outmate.ai+and+how+it+helps+B2B+sales+teams+identify+website+visitors"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ai-tool"
+              >
+                <img src="https://www.google.com/s2/favicons?domain=openai.com&sz=32" alt="ChatGPT" />
+                <span>ChatGPT</span>
+              </a>
+              <a
+                href="https://claude.ai/new?q=Tell+me+about+Outmate.ai+website+visitor+identification"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ai-tool"
+              >
+                <img src="https://www.google.com/s2/favicons?domain=claude.ai&sz=32" alt="Claude" />
+                <span>Claude</span>
+              </a>
+              <a
+                href="https://chat.deepseek.com/?q=What+is+Outmate.ai"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ai-tool"
+              >
+                <img src="https://www.google.com/s2/favicons?domain=deepseek.com&sz=32" alt="DeepSeek" />
+                <span>DeepSeek</span>
+              </a>
+              <a
+                href="https://x.com/i/grok?text=Tell+me+about+Outmate.ai"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ai-tool"
+              >
+                <img src="https://www.google.com/s2/favicons?domain=x.com&sz=32" alt="Grok" />
+                <span>Grok</span>
+              </a>
+            </div>
           </div>
         </div>
         <div className="foot-bottom">
           <span className="cr">
-            © Outmate <span id="yr">2026</span> · <a href="#">Privacy Policy</a> · <a href="#">Terms</a> ·{' '}
-            <a href="#">Contact</a>
+            © Outmate <span id="yr">2026</span> · <a className="placeholder-link">Privacy Policy</a> · <a className="placeholder-link">Terms</a> ·{' '}
+            <a className="placeholder-link">Contact</a>
           </span>
           <span className="cr">
             Sign up to our newsletter ·{' '}
@@ -2306,42 +3134,6 @@ export default function Home() {
           </span>
         </div>
       </footer>
-
-      {/* ===================== DYNAMIC ISLAND NAV ===================== */}
-      <div className="island hidden" id="island">
-        <div className="ring">
-          <svg width="34" height="34">
-            <circle cx="17" cy="17" r="14" fill="none" stroke="rgba(255,255,255,.15)" strokeWidth="2" />
-            <circle
-              id="ringProg"
-              cx="17"
-              cy="17"
-              r="14"
-              fill="none"
-              stroke="var(--accent)"
-              strokeWidth="2"
-              strokeDasharray="88"
-              strokeDashoffset="88"
-              strokeLinecap="round"
-            />
-          </svg>
-          <span className="pct" id="ringPct">
-            0
-          </span>
-        </div>
-        <div>
-          <div className="isl-label" id="islLabel">
-            Outmate
-          </div>
-          <div className="isl-sub" id="islSub">
-            Top
-          </div>
-        </div>
-        <span className="live">
-          <span className="d"></span>Live
-        </span>
-        <div className="isl-dots" id="islDots"></div>
-      </div>
     </div>
   )
 }

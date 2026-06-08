@@ -479,7 +479,8 @@ export default function HowItWorks() {
             className="mt-4 max-w-[28ch] font-display font-extrabold leading-[1.02] tracking-[-0.04em] text-black"
             style={{ fontSize: 'clamp(44px, 6.6vw, 88px)' }}
           >
-            FROM ANONYMOUS CLICK TO CLOSED DEAL.
+            <span className="block">FROM ANONYMOUS CLICK</span>
+            <span className="block">TO CLOSED DEAL.</span>
           </h2>
           <p className="mt-5 max-w-[70ch] text-[16px] leading-relaxed text-black md:text-[17px]">
             One platform takes a visitor through every step — identified, qualified, enriched, engaged, and

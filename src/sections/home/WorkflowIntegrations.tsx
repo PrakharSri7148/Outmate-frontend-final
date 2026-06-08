@@ -2,22 +2,20 @@ import { motion, useReducedMotion } from 'framer-motion'
 
 // ──────────────────────────────────────────────────────────────────────────────
 //  Integration logos — real, full-color brand marks living in
-//  /public/images/integrations/*.svg
+//  /public/images/integrations/
 // ──────────────────────────────────────────────────────────────────────────────
 const LOGOS = [
-  { name: 'Outlook', src: '/images/integrations/outlook.svg' },
-  { name: 'Lemlist', src: '/images/integrations/lemlist.svg' },
-  { name: 'Zapier', src: '/images/integrations/zapier.svg' },
-  { name: 'Intercom', src: '/images/integrations/intercom.svg' },
-  { name: 'Pipedrive', src: '/images/integrations/pipedrive.svg' },
-  { name: 'Salesforce', src: '/images/integrations/salesforce.svg' },
-  { name: 'HubSpot', src: '/images/integrations/hubspot.svg' },
-  { name: 'Apollo', src: '/images/integrations/apollo.svg' },
-  { name: 'Google Analytics', src: '/images/integrations/google-analytics.svg' },
-  { name: 'Slack', src: '/images/integrations/slack.svg' },
-  { name: 'Gmail', src: '/images/integrations/gmail.svg' },
-  { name: 'LinkedIn', src: '/images/integrations/linkedin.svg' },
-  { name: 'Excel', src: '/images/integrations/excel.svg' },
+  { name: 'Microsoft Copilot', src: '/images/integrations/microsoft-copilot.png' },
+  { name: 'Google Docs', src: '/images/integrations/google-docs.png' },
+  { name: 'Google Drive', src: '/images/integrations/google-drive.png' },
+  { name: 'OneDrive', src: '/images/integrations/onedrive.png' },
+  { name: 'SharePoint', src: '/images/integrations/sharepoint.png' },
+  { name: 'Confluence', src: '/images/integrations/confluence.png' },
+  { name: 'GitHub', src: '/images/integrations/github.png' },
+  { name: 'Asana', src: '/images/integrations/asana.png' },
+  { name: 'Airtable', src: '/images/integrations/airtable.png' },
+  { name: 'Microsoft Teams', src: '/images/integrations/microsoft-teams.png' },
+  { name: 'WhatsApp', src: '/images/integrations/whatsapp.png' },
 ]
 
 const ease = [0.22, 1, 0.36, 1] as const
@@ -87,7 +85,9 @@ export default function WorkflowIntegrations() {
             className="mt-4 max-w-[20ch] font-display font-extrabold leading-[1.02] tracking-[-0.04em] text-black"
             style={{ fontSize: 'clamp(40px, 6vw, 80px)' }}
           >
-            Push your leads into your favorite tools.
+            Push your leads into
+            <br />
+            your favorite tools.
           </h2>
           <p className="mt-5 max-w-[64ch] text-[16px] leading-relaxed text-slate-600 md:text-[17px]">
             Streamline your lead generation process by pushing your leads into your CRM, Slack, Email

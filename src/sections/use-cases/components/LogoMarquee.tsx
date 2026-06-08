@@ -1,19 +1,18 @@
 import { motion, useReducedMotion } from 'framer-motion'
 
-// Real, full-color brand marks living in /public/images/integrations/*.svg
+// Real, full-color brand marks living in /public/images/integrations/
 export const INTEGRATION_LOGOS = [
-  { name: 'Salesforce', src: '/images/integrations/salesforce.svg' },
-  { name: 'HubSpot', src: '/images/integrations/hubspot.svg' },
-  { name: 'Slack', src: '/images/integrations/slack.svg' },
-  { name: 'Gmail', src: '/images/integrations/gmail.svg' },
-  { name: 'Outlook', src: '/images/integrations/outlook.svg' },
-  { name: 'LinkedIn', src: '/images/integrations/linkedin.svg' },
-  { name: 'Pipedrive', src: '/images/integrations/pipedrive.svg' },
-  { name: 'Apollo', src: '/images/integrations/apollo.svg' },
-  { name: 'Intercom', src: '/images/integrations/intercom.svg' },
-  { name: 'Zapier', src: '/images/integrations/zapier.svg' },
-  { name: 'Lemlist', src: '/images/integrations/lemlist.svg' },
-  { name: 'Google Analytics', src: '/images/integrations/google-analytics.svg' },
+  { name: 'Microsoft Copilot', src: '/images/integrations/microsoft-copilot.png' },
+  { name: 'Google Docs', src: '/images/integrations/google-docs.png' },
+  { name: 'Google Drive', src: '/images/integrations/google-drive.png' },
+  { name: 'OneDrive', src: '/images/integrations/onedrive.png' },
+  { name: 'SharePoint', src: '/images/integrations/sharepoint.png' },
+  { name: 'Confluence', src: '/images/integrations/confluence.png' },
+  { name: 'GitHub', src: '/images/integrations/github.png' },
+  { name: 'Asana', src: '/images/integrations/asana.png' },
+  { name: 'Airtable', src: '/images/integrations/airtable.png' },
+  { name: 'Microsoft Teams', src: '/images/integrations/microsoft-teams.png' },
+  { name: 'WhatsApp', src: '/images/integrations/whatsapp.png' },
 ]
 
 type LogoItem = { name: string; src: string }

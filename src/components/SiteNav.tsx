@@ -29,8 +29,8 @@ export default function SiteNav() {
     /* ---------- dropdown hover-intent + keyboard ---------- */
     const items = Array.from(root.querySelectorAll<HTMLElement>('.nav-links .nav-item'))
     items.forEach((item) => {
-      // only items that actually have a dropdown panel
-      if (!item.querySelector('.nav-dd')) return
+      // only items that actually have a dropdown panel (simple .nav-dd or wide .mega-dd)
+      if (!item.querySelector('.nav-dd, .mega-dd')) return
       let hideTimer: ReturnType<typeof setTimeout> | null = null
       const clearHide = () => {
         if (hideTimer) {
@@ -44,7 +44,8 @@ export default function SiteNav() {
       }
       const scheduleClose = () => {
         clearHide()
-        hideTimer = setTimeout(() => item.classList.remove('open'), 180)
+        // grace period: stay open long enough to cross the trigger→panel gap
+        hideTimer = setTimeout(() => item.classList.remove('open'), 280)
       }
       const onEnter = () => open()
       const onLeave = () => scheduleClose()
